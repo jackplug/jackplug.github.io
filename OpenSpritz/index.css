@@ -32,7 +32,7 @@
 	font-style:normal;
 	height:38px;
 	line-height:38px;
-	width:125px;
+	padding: 0 10px;
 	text-decoration:none;
 	text-align:center;
 }
