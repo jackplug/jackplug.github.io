@@ -4,67 +4,65 @@
 // https://github.com/Miserlou/OpenSpritz
 
 // Please don't abuse this.
-//var readability_token = '172b057cd7cfccf27b60a36f16b1acde12783893';
-var readability_token = '16eb6cb8fce7ba707684a84665197f895a4719e9';
+var readability_token = '172b057cd7cfccf27b60a36f16b1acde12783893';
+var diffbot_token = '2efef432c72b5a923408e04353c39a7c';
 
-// Create the view from the remote resource.
 function create_spritz(){
 
      spritz_loader = function() {
+        //getURL("https://rawgithub.com/Miserlou/OpenSpritz/master/spritz.html", function(data){
 
-        //$.get("https://rawgithub.com/Miserlou/OpenSpritz/master/spritz.html", function(data){
-        $.get("https://jackplug.github.io/OpenSpritz/spritz.html", function(data){
+        //getURL("https://rawgithub.com/Miserlou/OpenSpritz/dev/spritz.html", function(data){
 
-            if (!($("#spritz_container").length) ) {
-                $("body").prepend(data);
-            }
+        // This won't work in Firefox because an old bug and won't work in Chrome because of security stuff:
+        //getURL("spritz.html", function(data){
 
-            // I suppose it's better to add that to spritz.html
-            $('#spritz_selector')
-            .after('<input type="range" id="spritz_slider" min="1" max="10" value="1">')
-            .after('<button type="button" id="spritz_toggle">Play</button>');
-        },'html');
+        //getURL("https://rawgithub.com/Miserlou/OpenSpritz/dev/spritz.html", function(data){
+        getURL("https://rawgithub.com/Miserlou/OpenSpritz/master/spritz.html", function(data){
+            var spritzContainer = document.getElementById("spritz_container");
+
+            if (!spritzContainer) {
+                var ele = document.createElement("div");
+                data = data.replace(/(\r\n|\n|\r)/gm,"");
+                ele.innerHTML = data;
+                document.body.insertBefore(ele, document.body.firstChild);
+                document.getElementById("spritz_toggle").style.display = "none";
+            };
+
+            document.getElementById("spritz_selector").addEventListener("change", function(e) {
+                clearTimeouts();
+                spritz();
+            });
+        });
     };
 
-    load_jq(spritz_loader);
+    spritz_loader();
 }
 
-// jQuery loader: http://coding.smashingmagazine.com/2010/05/23/make-your-own-bookmarklets-with-jquery/
-// This is pretty fucked and should be replaced. Is there anyway we can just force
-// the latest jQ? I wouldn't have a problem with that.
-function load_jq(spritz_loader){
+function getURL(url, callback) {
+    var xmlhttp = new XMLHttpRequest();
 
-    // the minimum version of jQuery we want
-    var v = "1.7.0";
-
-    // check prior inclusion and version
-    if (window.jQuery === undefined || window.jQuery.fn.jquery < v) {
-      var done = false;
-      var script = document.createElement("script");
-      script.src = "https://ajax.googleapis.com/ajax/libs/jquery/" + v + "/jquery.min.js";
-      script.onload = script.onreadystatechange = function(){
-        if (!done && (!this.readyState || this.readyState == "loaded" || this.readyState == "complete")) {
-          done = true;
-          spritz_loader();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            callback(xmlhttp.responseText);
         }
-      };
-      document.getElementsByTagName("head")[0].appendChild(script);
-    } else{
-        spritz_loader();
     }
+
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
 }
 
 function hide_spritz(){
-    $('#spritz_spacer').slideUp();
-    $('#spritz_container').slideUp();
-    $('#spritz_holder').slideUp();
+    document.getElementById("spritz_spacer").style.display = "none";
+    document.getElementById("spritz_container").style.display = "none";
+    document.getElementById("spritz_holder").style.display = "none";
 }
 
 // Entry point to the beef.
 // Gets the WPM and the selected text, if any.
 function spritz(){
 
-    var wpm = parseInt($("#spritz_selector").val(), 10);
+    var wpm = parseInt(document.getElementById("spritz_selector").value, 10);
     if(wpm < 1){
         return;
     }
@@ -81,7 +79,7 @@ function spritz(){
 // The meat!
 function spritzify(input){
 
-    var wpm = parseInt($("#spritz_selector").val(), 10);
+    var wpm = parseInt(document.getElementById("spritz_selector").value, 10);
     var ms_per_word = 60000/wpm;
 
     // Split on any spaces.
@@ -89,7 +87,6 @@ function spritzify(input){
 
     var word = '';
     var result = '';
-
 
     // Preprocess words
     var temp_words = all_words.slice(0); // copy Array
@@ -126,10 +123,10 @@ function spritzify(input){
     all_words = temp_words.slice(0);
 
     var currentWord = 0;
-    var running = false;
+    var running = true;
     var spritz_timers = new Array();
 
-    $('#spritz_toggle').click(function() {
+    document.getElementById("spritz_toggle").addEventListener("click", function() {
         if(running) {
             stopSpritz();
         } else {
@@ -137,22 +134,20 @@ function spritzify(input){
         }
     });
 
-    $('#spritz_slider').change(function() {
-        updateValues($('#spritz_slider').val() - 1);
-    });
-
     function updateValues(i) {
-        $('#spritz_slider').val(i);
+
         var p = pivot(all_words[i]);
-        $('#spritz_result').html(p);
+        document.getElementById("spritz_result").innerHTML = p;
         currentWord = i;
+
     }
 
     function startSpritz() {
-        $('#spritz_toggle').html('Stop');
+
+        document.getElementById("spritz_toggle").style.display = "block";
+        document.getElementById("spritz_toggle").textContent = "Pause";
+
         running = true;
-        // Set slider max value
-        $('#spritz_slider').attr("max", all_words.length);
 
         spritz_timers.push(setInterval(function() {
             updateValues(currentWord);
@@ -168,14 +163,19 @@ function spritzify(input){
         for(var i = 0; i < spritz_timers.length; i++) {
             clearTimeout(spritz_timers[i]);
         }
-        $('#spritz_toggle').html('Play');
+
+        document.getElementById("spritz_toggle").textContent = "Play";
         running = false;
     }
+
+    startSpritz();
 }
 
 // Find the red-character of the current word.
 function pivot(word){
     var length = word.length;
+
+    word = decodeEntities(word);
 
     // Longer words are "right-weighted" for easier readability.
     if(length<6){
@@ -193,13 +193,8 @@ function pivot(word){
 
         var start = '';
         var end = '';
-        if((length % 2) === 0){
-            start = word.slice(0, word.length/2);
-            end = word.slice(word.length/2, word.length);
-        } else{
-            start = word.slice(0, word.length/2);
-            end = word.slice(word.length/2, word.length);
-        }
+        start = decodeEntities(word.slice(0, word.length/2));
+        end = decodeEntities(word.slice(word.length/2, word.length));
 
         var result;
         result = "<span class='spritz_start'>" + start.slice(0, start.length -1);
@@ -215,8 +210,8 @@ function pivot(word){
         var tail = 22 - (word.length + 7);
         word = '.......' + word + ('.'.repeat(tail));
 
-        var start = word.slice(0, word.length/2);
-        var end = word.slice(word.length/2, word.length);
+        var start = decodeEntities(word.slice(0, word.length/2));
+        var end = decodeEntities(word.slice(word.length/2, word.length));
 
         var result;
         result = "<span class='spritz_start'>" + start.slice(0, start.length -1);
@@ -263,34 +258,37 @@ function getSelectionText() {
 function spritzifyURL(){
     var url = document.URL;
 
-    $.getJSON("https://www.readability.com/api/content/v1/parser?url="+ encodeURIComponent(url) +"&token=" + readability_token +"&callback=?",
-    function (data) {
+    //getURL("https://www.readability.com/api/content/v1/parser?url="+ encodeURIComponent(url) +"&token=" + readability_token +"&callback=?",
+    getURL("https://api.diffbot.com/v2/article?url="+ encodeURIComponent(url) +"&token=" + diffbot_token, // +"&callback=?",
+        function(data) {
 
-        if(data.error){
-            $('#spritz_result').html("Article extraction failed. Try selecting text instead.");
-            return;
-        }
+            data = JSON.parse(data);
 
-        var title = '';
-        if(data.title !== ""){
-            title = data.title + ". ";
-        }
+            if(data.error){
+                document.getElementById("spritz_result").innerText = "Article extraction failed. Try selecting text instead.";
+                return;
+            }
 
-        var author = '';
-        if(data.author !== null){
-            author = "By " + data.author + ". ";
-        }
+            var title = '';
+            if(data.title !== ""){
+                title = data.title + ". ";
+            }
 
-        var body = jQuery(data.content).text(); // Textify HTML content.
-        body = $.trim(body); // Trim trailing and leading whitespace.
-        body = body.replace(/\s+/g, ' '); // Shrink long whitespaces.
+            var author = '';
+            if(data.author !== undefined){
+                author = "By " + data.author + ". ";
+            }
 
-        var text_content = title + author + body;
-        text_content = text_content.replace(/\./g, '. '); // Make sure punctuation is apprpriately spaced.
-        text_content = text_content.replace(/\?/g, '? ');
-        text_content = text_content.replace(/\!/g, '! ');
-        spritzify(text_content);
-    });
+            var body = data.text;
+            body = body.trim(); // Trim trailing and leading whitespace.
+            body = body.replace(/\s+/g, ' '); // Shrink long whitespaces.
+
+            var text_content = title + author + body;
+            text_content = text_content.replace(/\./g, '. '); // Make sure punctuation is apprpriately spaced.
+            text_content = text_content.replace(/\?/g, '? ');
+            text_content = text_content.replace(/\!/g, '! ');
+            spritzify(text_content);
+        });
 
 }
 
@@ -310,6 +308,18 @@ function clearTimeouts(){
 // Let strings repeat themselves,
 // because JavaScript isn't as awesome as Python.
 String.prototype.repeat = function( num ){
+    if(num < 1){
+        return new Array( Math.abs(num) + 1 ).join( this );
+    }
     return new Array( num + 1 ).join( this );
+};
+
+function decodeEntities(s){
+    var str, temp= document.createElement('p');
+    temp.innerHTML= s;
+    str= temp.textContent || temp.innerText;
+    temp=null;
+    return str;
 }
+
 

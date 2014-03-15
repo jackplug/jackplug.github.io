@@ -73,14 +73,14 @@ body{
     text-decoration: none;
 }
 
-#spritz_selector, #spritz_toggle, #spritz_slider {
-    display: inline-block;
-    vertical-align: middle;
+#spritz_selector{
+    float: left;
+    width: auto;
 }
 
-#spritz_selector{
-    /*float: left;*/
-    width: auto;
+#spritz_toggle{
+    float: left;
+    width: auto;   
 }
 
 .invisible{
