@@ -73,15 +73,17 @@ body{
     text-decoration: none;
 }
 
-#spritz_selector{
-    float: left;
-    width: auto;
+#spritz_selector,
+#spritz_toggle{
+    float: left !important;
+    width: auto !important;
+    line-height: 30px !important;
+    height: 30px !important;
+    font-size: 14px !important;
+    padding: 0 6px !important;
+    border: 1px solid #888 !important;
 }
 
-#spritz_toggle{
-    float: left;
-    width: auto;   
-}
 
 .invisible{
     font-family: 'Droid Sans Mono', sans-serif;
