@@ -18,7 +18,8 @@ function create_spritz(){
         //getURL("spritz.html", function(data){
 
         //getURL("https://rawgithub.com/Miserlou/OpenSpritz/dev/spritz.html", function(data){
-        getURL("https://rawgithub.com/Miserlou/OpenSpritz/master/spritz.html", function(data){
+        //getURL("https://rawgithub.com/Miserlou/OpenSpritz/master/spritz.html", function(data){
+            getURL("https://jackplug.github.io/OpenSpritz/spritz.html", function(data){
             var spritzContainer = document.getElementById("spritz_container");
 
             if (!spritzContainer) {
