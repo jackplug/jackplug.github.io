@@ -1,0 +1,883 @@
+<!DOCTYPE html><html lang='en' class=''>
+<head>
+  <meta charset='UTF-8'>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css'>
+<style class="cp-pen-styles">/* configuration */
+:root {
+  --maxwidth: 1200px;
+  --columns: 4;
+  --gap: 1rem;
+  --horiz-padding: 5%;
+}
+
+body {
+  background: #f0f0f0;
+}
+
+/* grid layout */
+.items-container {
+  width: 100%;
+  max-width: var(--maxwidth);
+  margin: 10px auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(calc((var(--maxwidth) / var(--columns) - var(--gap))), 1fr));
+  grid-gap: var(--gap);
+  box-sizing: border-box;
+}
+
+/* ensure that heading spans the whole grid container */
+.items-container h2 {
+  grid-column: 1 / -1;
+}
+
+/* item components - mostly pretty stuff */
+.item-inner {
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 5px;
+  background: #fff;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 25px -12px #000;
+  position: relative;
+  transition: all 100ms ease-out;
+}
+
+.item-inner:hover {
+  box-shadow: 0 0 30px -8px #000;
+  transform: scale(1.05); /*firefox text problem on scale() :( */
+  z-index: 20;
+}
+
+.item-heading {
+  margin: 0;
+}
+
+.item-heading a {
+  font-size: 16px;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(2 * (16px * 1.2));
+  overflow: hidden;
+  padding-left: var(--horiz-padding);
+  padding-right: var(--horiz-padding);
+  padding: 10px var(--horiz-padding);
+  color: #666;
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.item-heading span {
+  text-align: center;
+}
+
+.thumbnail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 200px;
+}
+
+.thumbnail img {
+  height: auto;
+  width: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.signs {
+  position: absolute;
+  left: 0;
+  top: 5px;
+  font-size: 12px;
+  color: #444;
+  font-weight: bold;
+  text-shadow: 0 0 1px rgba(255,255,255,0.6);
+}
+
+.signs [class*="label-"] {
+  float: left;
+  clear: left;
+  padding: 3px 5px;
+  margin: 3px 0;
+  background: rgba(0,0,0,0.2);
+    -webkit-font-smoothing: antialiased;
+
+}
+
+.signs i {
+  display: none;
+}
+
+.item-price-action-section {
+  margin-top: auto;
+  padding-top: 5px;
+  order: 99;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.product-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+}
+
+.add-to-cart,
+.add-to-compare {
+  display: block;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  overflow: hidden;
+  text-decoration: none;
+  background: #dcf;
+  text-align: center;
+}
+
+.add-to-compare {
+  margin-right: 2px;
+}
+
+.add-to-compare::before {
+  content: '\2696';
+  display: block;
+  width: 40px;
+  font-size: 1.3em;
+  color: #000;
+}
+
+.add-to-cart::before {
+  content: '\1f6d2';
+  display: block;
+  width: 40px;
+}
+
+.price {
+  padding-left: var(--horiz-padding);
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  flex: 1;
+}
+
+.full-price {
+  font-size: 1.4em;
+}
+
+.full-price strong {
+  font-weight: normal;
+}
+
+.discount {
+  font-size: 0.7em;
+}
+
+/* ===CSS Search */
+/* visuals for search */
+[for="csssearch"],
+[id="csssearch"] {
+  display: block;
+  max-width: 300px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+[for="csssearch"] {
+  margin-top: 10px;
+  margin-bottom: 5px;
+  text-align: center;
+}
+/* END ==CSS Search */
+
+/* non-related styles */
+h1 {
+  font-size: 22px;
+  text-align: center;
+}
+
+h1 a {
+  font-size: 15px;
+  font-weight: normal;
+}
+
+h1 ~ [id="moreInfo"] > * {
+  max-width: 72ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+[id="moreInfo"] {
+  padding-top: 1em;
+}
+
+[id="moreInfo"] > *,
+[id="moreInfo"] li {
+  margin-top: 1em;
+}</style></head><body>
+  <p><small>from <a href="https://codepen.io/jackplug/pen/BxMxBq">codepen</a></small></p>
+<h1>CSS Selector-powered inline search <a href="#moreInfo">more info</a></h1>
+
+<label for="csssearch">Find items using CSS selector</label><input type="text" id="csssearch" value="">
+<div id="sect-catalog" class="row-fluid items-container separate-bottom">
+        <h2 class="a-hidden">Produkty</h2>
+        <div class="item" data-search="Proměnlivé křeslo" itemscope="" itemtype="http://schema.org/Product">
+    <div class="item-inner">
+                <h3 class="item-heading">
+            <a href="/p/promenlive-kreslo/" itemprop="url"><span itemprop="name">Proměnlivé křeslo</span></a>
+        </h3>
+        
+                <a class="thumbnail" href="/p/promenlive-kreslo/">
+                        <img src="https://static.demo.shopio.cz/files/photos/m/2/259847d8d4bfdaa88fd1a980feac0ed376ac5d57.jpg" alt="Proměnlivé křeslo">
+            
+                        <span class="signs">
+                                    <span class="label-in-stock" title="Skladem">
+                        Skladem
+                    </span>
+                
+                                                            <span class="label label-rec" title="Doporučujeme!">
+                            <i class="icon-thumbs-up"></i>Doporučujeme!
+                        </span>
+                                                                                                                                                
+                            </span>
+                    </a>
+        
+                <div class="item-price-action-section row-fluid compare" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+                        <p class="price">
+                                                    <span class="discount">
+                                        <del>
+                        6 499 Kč
+                    </del>
+                    
+                                        <span class="discount-percentage">
+                        (8 %)
+                    </span>
+                                    </span>
+                                
+                                <span class="full-price">
+                    <strong itemprop="price">
+                        5 999 Kč
+                    </strong>
+                </span>
+                            </p>
+            
+                        <p class="product-actions">
+                                                                            <a href="/porovnani/pridat/id/28/" class="add-to-compare" title="Přidat 'Proměnlivé křeslo' k porovnání" rel="nofollow">
+                            <i class="icon-bar-chart">Přidat 'Proměnlivé křeslo' k porovnání</i>
+                        </a>
+                                                    
+                                                    <a href="/kosik/pridat/id/28/" class="add-to-cart" rel="nofollow" title="Přidat 'Proměnlivé křeslo' do košíku">
+                        Koupit
+                    </a>
+                                            </p>
+                    </div>
+        
+                        
+                        
+    </div>
+</div>
+<div class="item" data-search="Vana Beruška" itemscope="" itemtype="http://schema.org/Product">
+    <div class="item-inner">
+                <h3 class="item-heading">
+            <a href="/p/vana-beruska/" itemprop="url"><span itemprop="name">Vana "Beruška"</span></a>
+        </h3>
+        
+                <a class="thumbnail" href="/p/vana-beruska/">
+                        <img src="https://static.demo.shopio.cz/files/photos/m/c/c15c9da4fe9f55916dd9d9de3de6026379ea3b36.jpg" alt="Vana &quot;Beruška&quot;">
+            
+                        <span class="signs">
+                
+                                                            <span class="label label-rec" title="Doporučujeme!">
+                            <i class="icon-thumbs-up"></i>Doporučujeme!
+                        </span>
+                                                                                                                                                
+                            </span>
+                    </a>
+        
+                <div class="item-price-action-section row-fluid compare" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+                        <p class="price">
+                                                
+                                <span class="full-price">
+                    <strong itemprop="price">
+                        4 999 Kč
+                    </strong>
+                </span>
+                            </p>
+            
+                        <p class="product-actions">
+                                                                            <a href="/porovnani/pridat/id/26/" class="add-to-compare" title="Přidat 'Vana &amp;quot;Beruška&amp;quot;' k porovnání" rel="nofollow">
+                            <i class="icon-bar-chart">Přidat 'Vana &amp;quot;Beruška&amp;quot;' k porovnání</i>
+                        </a>
+                                                    
+                                                    <a href="/kosik/pridat/id/26/" class="add-to-cart" rel="nofollow" title="Přidat 'Vana &amp;quot;Beruška&amp;quot;' do košíku">
+                        Koupit
+                    </a>
+                                            </p>
+                    </div>
+        
+                        
+                        
+    </div>
+</div>
+<div class="item" data-search="Kuchyňská sada Tom, Dick a Harry" itemscope="" itemtype="http://schema.org/Product">
+    <div class="item-inner">
+                <h3 class="item-heading">
+            <a href="/p/kuchynska-sada-tom-dick-a-harry/" itemprop="url"><span itemprop="name">Kuchyňská sada Tom, Dick a Harry</span></a>
+        </h3>
+        
+                <a class="thumbnail" href="/p/kuchynska-sada-tom-dick-a-harry/">
+                        <img src="https://static.demo.shopio.cz/files/photos/m/d/dc4ae58c4ba4445ab43326c254b54dfcca37b793.jpg" alt="Kuchyňská sada Tom, Dick a Harry">
+            
+                        <span class="signs">
+                                    <span class="label-in-stock" title="Skladem">
+                        Skladem
+                    </span>
+                
+                                                            <span class="label label-rec" title="Doporučujeme!">
+                            <i class="icon-thumbs-up"></i>Doporučujeme!
+                        </span>
+                                                                                                                                                
+                            </span>
+                    </a>
+        
+                <div class="item-price-action-section row-fluid compare" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+                        <p class="price">
+                                                
+                                <span class="full-price">
+                    <strong itemprop="price">
+                        1 999 Kč
+                    </strong>
+                </span>
+                            </p>
+            
+                        <p class="product-actions">
+                                                                            <a href="/porovnani/pridat/id/24/" class="add-to-compare" title="Přidat 'Kuchyňská sada Tom, Dick a Harry' k porovnání" rel="nofollow">
+                            <i class="icon-bar-chart">Přidat 'Kuchyňská sada Tom, Dick a Harry' k porovnání</i>
+                        </a>
+                                                    
+                                                    <a href="/kosik/pridat/id/24/" class="add-to-cart" rel="nofollow" title="Přidat 'Kuchyňská sada Tom, Dick a Harry' do košíku">
+                        Koupit
+                    </a>
+                                            </p>
+                    </div>
+        
+                        
+                        
+    </div>
+</div>
+<div class="item" data-search="Stojací lampa Hřib" itemscope="" itemtype="http://schema.org/Product">
+    <div class="item-inner">
+                <h3 class="item-heading">
+            <a href="/p/stojaci-lampa-hrib/" itemprop="url"><span itemprop="name">Stojací lampa "Hřib"</span></a>
+        </h3>
+        
+                <a class="thumbnail" href="/p/stojaci-lampa-hrib/">
+                        <img src="https://static.demo.shopio.cz/files/photos/m/1/1abea557927d00508e17f4e9ae281b3314faf3b0.jpg" alt="Stojací lampa &quot;Hřib&quot;">
+            
+                        <span class="signs">
+                                    <span class="label-in-stock" title="Skladem">
+                        Skladem
+                    </span>
+                
+                                                            <span class="label label-rec" title="Doporučujeme!">
+                            <i class="icon-thumbs-up"></i>Doporučujeme!
+                        </span>
+                                                                                                                    <span class="label label-sale" title="Výprodej">
+                            <i class="">%</i>Výprodej
+                        </span>
+                                                                        
+                            </span>
+                    </a>
+        
+                <div class="item-price-action-section row-fluid compare" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+                        <p class="price">
+                                                    <span class="discount">
+                                        <del>
+                        4 000 Kč
+                    </del>
+                    
+                                        <span class="discount-percentage">
+                        (50 %)
+                    </span>
+                                    </span>
+                                
+                                <span class="full-price">
+                    <strong itemprop="price">
+                        1 999 Kč
+                    </strong>
+                </span>
+                            </p>
+            
+                        <p class="product-actions">
+                                                                            <a href="/porovnani/pridat/id/29/" class="add-to-compare" title="Přidat 'Stojací lampa &amp;quot;Hřib&amp;quot;' k porovnání" rel="nofollow">
+                            <i class="icon-bar-chart">Přidat 'Stojací lampa &amp;quot;Hřib&amp;quot;' k porovnání</i>
+                        </a>
+                                                    
+                                                    <a href="/kosik/pridat/id/29/" class="add-to-cart" rel="nofollow" title="Přidat 'Stojací lampa &amp;quot;Hřib&amp;quot;' do košíku">
+                        Koupit
+                    </a>
+                                            </p>
+                    </div>
+        
+                        
+                        
+    </div>
+</div>
+<div class="item" data-search="Dálkové ovládání ve tvaru jablka" itemscope="" itemtype="http://schema.org/Product">
+    <div class="item-inner">
+                <h3 class="item-heading">
+            <a href="/p/dalkove-ovladani-ve-tvaru-jablka/" itemprop="url"><span itemprop="name">Dálkové ovládání ve tvaru jablka</span></a>
+        </h3>
+        
+                <a class="thumbnail" href="/p/dalkove-ovladani-ve-tvaru-jablka/">
+                        <img src="https://static.demo.shopio.cz/files/photos/m/e/e127b03487d55cafa7c048678ccddeb90f714045.jpg" alt="Apple ovladač od Sony">
+            
+                        <span class="signs">
+                                    <span class="label-in-stock" title="Skladem">
+                        Skladem
+                    </span>
+                
+                                                            <span class="label label-rec" title="Doporučujeme!">
+                            <i class="icon-thumbs-up"></i>Doporučujeme!
+                        </span>
+                                                                                <span class="label label-act" title="Akce">
+                            <i class="icon-star"></i>Akce
+                        </span>
+                                                                                <span class="label label-sale" title="Výprodej">
+                            <i class="">%</i>Výprodej
+                        </span>
+                                                                        
+                            </span>
+                    </a>
+        
+                <div class="item-price-action-section row-fluid compare" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+                        <p class="price">
+                                                    <span class="discount">
+                                        <del>
+                        1 899 Kč
+                    </del>
+                    
+                                        <span class="discount-percentage">
+                        (32 %)
+                    </span>
+                                    </span>
+                                
+                                <span class="full-price">
+                    <strong itemprop="price">
+                        1 299 Kč
+                    </strong>
+                </span>
+                            </p>
+            
+                        <p class="product-actions">
+                                                                            <a href="/porovnani/pridat/id/19/" class="add-to-compare" title="Přidat 'Dálkové ovládání ve tvaru jablka' k porovnání" rel="nofollow">
+                            <i class="icon-bar-chart">Přidat 'Dálkové ovládání ve tvaru jablka' k porovnání</i>
+                        </a>
+                                                    
+                                                    <a href="/kosik/pridat/id/19/" class="add-to-cart" rel="nofollow" title="Přidat 'Dálkové ovládání ve tvaru jablka' do košíku">
+                        Koupit
+                    </a>
+                                            </p>
+                    </div>
+        
+                        
+                        
+    </div>
+</div>
+<div class="item" data-search="Hodiny kukačky" itemscope="" itemtype="http://schema.org/Product">
+    <div class="item-inner">
+                <h3 class="item-heading">
+            <a href="/p/hodiny-kukacky/" itemprop="url"><span itemprop="name">Hodiny kukačky</span></a>
+        </h3>
+        
+                <a class="thumbnail" href="/p/hodiny-kukacky/">
+                        <img src="https://static.demo.shopio.cz/files/photos/m/e/e4eb7c2a96bbade78f5decd73a7297c72a3ffa5d.jpg" alt="Hodiny kukačky">
+            
+                        <span class="signs">
+                
+                                                                                                                                                                        <span class="label label-new" title="Novinka">
+                            <i class="">N</i>Novinka
+                        </span>
+                                    
+                            </span>
+                    </a>
+        
+                <div class="item-price-action-section row-fluid compare" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+                        <p class="price">
+                                                
+                                <span class="full-price">
+                    <strong itemprop="price">
+                        2 999 Kč
+                    </strong>
+                </span>
+                            </p>
+            
+                        <p class="product-actions">
+                                                                            <a href="/porovnani/pridat/id/27/" class="add-to-compare" title="Přidat 'Hodiny kukačky' k porovnání" rel="nofollow">
+                            <i class="icon-bar-chart">Přidat 'Hodiny kukačky' k porovnání</i>
+                        </a>
+                                                    
+                                                    <a href="/kosik/pridat/id/27/" class="add-to-cart" rel="nofollow" title="Přidat 'Hodiny kukačky' do košíku">
+                        Koupit
+                    </a>
+                                            </p>
+                    </div>
+        
+                        
+                        
+    </div>
+</div>
+<div class="item" data-search="Živá židle" itemscope="" itemtype="http://schema.org/Product">
+    <div class="item-inner">
+                <h3 class="item-heading">
+            <a href="/p/ziva-zidle/" itemprop="url"><span itemprop="name">Živá židle</span></a>
+        </h3>
+        
+                <a class="thumbnail" href="/p/ziva-zidle/">
+                        <img src="https://static.demo.shopio.cz/files/photos/m/0/03c6ffce13cd3a022d0fab7120670be78f1fc776.jpg" alt="Živá židle">
+            
+                        <span class="signs">
+                                    <span class="label-in-stock" title="Skladem">
+                        Skladem
+                    </span>
+                
+                                                            <span class="label label-rec" title="Doporučujeme!">
+                            <i class="icon-thumbs-up"></i>Doporučujeme!
+                        </span>
+                                                                                                                                                        <span class="label label-new" title="Novinka">
+                            <i class="">N</i>Novinka
+                        </span>
+                                    
+                            </span>
+                    </a>
+        
+                <div class="item-price-action-section row-fluid compare" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+                        <p class="price">
+                                                
+                                <span class="full-price">
+                    <strong itemprop="price">
+                        599 Kč
+                    </strong>
+                </span>
+                            </p>
+            
+                        <p class="product-actions">
+                                                                            <a href="/porovnani/pridat/id/25/" class="add-to-compare" title="Přidat 'Živá židle' k porovnání" rel="nofollow">
+                            <i class="icon-bar-chart">Přidat 'Živá židle' k porovnání</i>
+                        </a>
+                                                    
+                                                    <a href="/kosik/pridat/id/25/" class="add-to-cart" rel="nofollow" title="Přidat 'Živá židle' do košíku">
+                        Koupit
+                    </a>
+                                            </p>
+                    </div>
+        
+                        
+                        
+    </div>
+</div>
+<div class="item" data-search="Velkooká jehla" itemscope="" itemtype="http://schema.org/Product">
+    <div class="item-inner">
+                <h3 class="item-heading">
+            <a href="/p/velkooka-jehla/" itemprop="url"><span itemprop="name">Velkooká jehla</span></a>
+        </h3>
+        
+                <a class="thumbnail" href="/p/velkooka-jehla/">
+                        <img src="https://static.demo.shopio.cz/files/photos/m/8/88ba8a04bf4d0da7e65ac1230a49925689cf9eec.jpg" alt="Velkooká jehla">
+            
+                        <span class="signs">
+                                    <span class="label-in-stock" title="Skladem">
+                        Skladem
+                    </span>
+                
+                                                            <span class="label label-rec" title="Doporučujeme!">
+                            <i class="icon-thumbs-up"></i>Doporučujeme!
+                        </span>
+                                                                                                                                                        <span class="label label-new" title="Novinka">
+                            <i class="">N</i>Novinka
+                        </span>
+                                    
+                            </span>
+                    </a>
+        
+                <div class="item-price-action-section row-fluid compare" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+                        <p class="price">
+                                                
+                                <span class="full-price">
+                    <strong itemprop="price">
+                        199 Kč
+                    </strong>
+                </span>
+                            </p>
+            
+                        <p class="product-actions">
+                                                                            <a href="/porovnani/pridat/id/18/" class="add-to-compare" title="Přidat 'Velkooká jehla' k porovnání" rel="nofollow">
+                            <i class="icon-bar-chart">Přidat 'Velkooká jehla' k porovnání</i>
+                        </a>
+                                                    
+                                                    <a href="/kosik/pridat/id/18/" class="add-to-cart" rel="nofollow" title="Přidat 'Velkooká jehla' do košíku">
+                        Koupit
+                    </a>
+                                            </p>
+                    </div>
+        
+                        
+                        
+    </div>
+</div>
+<div class="item" data-search="Nepřevrhnutelné sklenice" itemscope="" itemtype="http://schema.org/Product">
+    <div class="item-inner">
+                <h3 class="item-heading">
+            <a href="/p/neprevrhnutelne-sklenice/" itemprop="url"><span itemprop="name">Nepřevrhnutelné sklenice</span></a>
+        </h3>
+        
+                <a class="thumbnail" href="/p/neprevrhnutelne-sklenice/">
+                        <img src="https://static.demo.shopio.cz/files/photos/m/a/aa896a5f53e9036b5c129417adc2de9dd9b1a6ff.jpg" alt="Nepřevrhnutelné sklenice">
+            
+                        <span class="signs">
+                                    <span class="label-in-stock" title="Skladem">
+                        Skladem
+                    </span>
+                
+                                                            <span class="label label-rec" title="Doporučujeme!">
+                            <i class="icon-thumbs-up"></i>Doporučujeme!
+                        </span>
+                                                                                                                                                
+                            </span>
+                    </a>
+        
+                <div class="item-price-action-section row-fluid compare" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+                        <p class="price">
+                                                
+                                <span class="full-price">
+                    <strong itemprop="price">
+                        499 Kč
+                    </strong>
+                </span>
+                            </p>
+            
+                        <p class="product-actions">
+                                                                            <a href="/porovnani/pridat/id/17/" class="add-to-compare" title="Přidat 'Nepřevrhnutelné sklenice' k porovnání" rel="nofollow">
+                            <i class="icon-bar-chart">Přidat 'Nepřevrhnutelné sklenice' k porovnání</i>
+                        </a>
+                                                    
+                                                    <a href="/kosik/pridat/id/17/" class="add-to-cart" rel="nofollow" title="Přidat 'Nepřevrhnutelné sklenice' do košíku">
+                        Koupit
+                    </a>
+                                            </p>
+                    </div>
+        
+                        
+                        
+    </div>
+</div>
+<div class="item" data-search="Utěrka - odkapávač" itemscope="" itemtype="http://schema.org/Product">
+    <div class="item-inner">
+                <h3 class="item-heading">
+            <a href="/p/uterka-odkapavac/" itemprop="url"><span itemprop="name">Utěrka - odkapávač</span></a>
+        </h3>
+        
+                <a class="thumbnail" href="/p/uterka-odkapavac/">
+                        <img src="https://static.demo.shopio.cz/files/photos/m/e/eab54e88705baaa064c366eb2145dbe553a4a739.jpg" alt="Utěrka - odkapávač">
+            
+                        <span class="signs">
+                                    <span class="label-in-stock" title="Skladem">
+                        Skladem
+                    </span>
+                
+                                                                                                                                                                
+                            </span>
+                    </a>
+        
+                <div class="item-price-action-section row-fluid compare" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+                        <p class="price">
+                                                
+                                <span class="full-price">
+                    <strong itemprop="price">
+                        349 Kč
+                    </strong>
+                </span>
+                            </p>
+            
+                        <p class="product-actions">
+                                                                            <a href="/porovnani/pridat/id/16/" class="add-to-compare" title="Přidat 'Utěrka - odkapávač' k porovnání" rel="nofollow">
+                            <i class="icon-bar-chart">Přidat 'Utěrka - odkapávač' k porovnání</i>
+                        </a>
+                                                    
+                                                    <a href="/kosik/pridat/id/16/" class="add-to-cart" rel="nofollow" title="Přidat 'Utěrka - odkapávač' do košíku">
+                        Koupit
+                    </a>
+                                            </p>
+                    </div>
+        
+                        
+                        
+    </div>
+</div>
+<div class="item" data-search="Sputnik LED lampa s úložným prostorem" itemscope="" itemtype="http://schema.org/Product">
+    <div class="item-inner">
+                <h3 class="item-heading">
+            <a href="/p/sputnik-led-lampa-s-uloznym-prostorem/" itemprop="url"><span itemprop="name">Sputnik LED lampa s úložným prostorem </span></a>
+        </h3>
+        
+                <a class="thumbnail" href="/p/sputnik-led-lampa-s-uloznym-prostorem/">
+                        <img src="https://static.demo.shopio.cz/files/photos/m/5/59912f2303f4564774207ca7689254e180b227c7.jpg" alt="Sputnik LED lampa s úložným prostorem ">
+            
+                        <span class="signs">
+                                    <span class="label-in-stock" title="Skladem">
+                        Skladem
+                    </span>
+                
+                                                            <span class="label label-rec" title="Doporučujeme!">
+                            <i class="icon-thumbs-up"></i>Doporučujeme!
+                        </span>
+                                                                                <span class="label label-act" title="Akce">
+                            <i class="icon-star"></i>Akce
+                        </span>
+                                                                                                            
+                                    <span class="label label-free-transport" title="Doprava zdarma">
+                        <i class="icon-truck"></i>Doprava zdarma
+                    </span>
+                            </span>
+                    </a>
+        
+                <div class="item-price-action-section row-fluid compare" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+                        <p class="price">
+                                                    <span class="discount">
+                                        <del>
+                        3 399 Kč
+                    </del>
+                    
+                                        <span class="discount-percentage">
+                        (12 %)
+                    </span>
+                                    </span>
+                                
+                                <span class="full-price">
+                    <strong itemprop="price">
+                        2 999 Kč
+                    </strong>
+                </span>
+                            </p>
+            
+                        <p class="product-actions">
+                                                                            <a href="/porovnani/pridat/id/21/" class="add-to-compare" title="Přidat 'Sputnik LED lampa s úložným prostorem ' k porovnání" rel="nofollow">
+                            <i class="icon-bar-chart">Přidat 'Sputnik LED lampa s úložným prostorem ' k porovnání</i>
+                        </a>
+                                                    
+                                                    <a href="/kosik/pridat/id/21/" class="add-to-cart" rel="nofollow" title="Přidat 'Sputnik LED lampa s úložným prostorem ' do košíku">
+                        Koupit
+                    </a>
+                                            </p>
+                    </div>
+        
+                        
+                        
+    </div>
+</div>
+<div class="item" data-search="Počítač ve stolní lampě" itemscope="" itemtype="http://schema.org/Product">
+    <div class="item-inner">
+                <h3 class="item-heading">
+            <a href="/p/pocitac-ve-stolni-lampe/" itemprop="url"><span itemprop="name">Počítač ve stolní lampě</span></a>
+        </h3>
+        
+                <a class="thumbnail" href="/p/pocitac-ve-stolni-lampe/">
+                        <img src="https://static.demo.shopio.cz/files/photos/m/a/aa6bd838027fd13016cc1a6ff449ecc982b2112b.jpg" alt="Počítač ve stolní lampě">
+            
+                        <span class="signs">
+                
+                                                                                                                                                                
+                            </span>
+                    </a>
+        
+                <div class="item-price-action-section row-fluid compare" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+                        <p class="price">
+                                                
+                                <span class="full-price">
+                    <strong itemprop="price">
+                        10 999 Kč
+                    </strong>
+                </span>
+                            </p>
+            
+                        <p class="product-actions">
+                                                                            <a href="/porovnani/pridat/id/20/" class="add-to-compare" title="Přidat 'Počítač ve stolní lampě' k porovnání" rel="nofollow">
+                            <i class="icon-bar-chart">Přidat 'Počítač ve stolní lampě' k porovnání</i>
+                        </a>
+                                                    
+                                                    <span class="add-to-cart not-being-sold" title="Produkt není v prodeji">
+                        Koupit
+                    </span>
+                                            </p>
+                    </div>
+        
+                        
+                        
+    </div>
+</div>
+
+    </div>
+
+<div id="moreInfo">
+  <p>
+  A basic inline filter that uses the browser's CSS engine to select elements. It would be <em>really</em> nice if we could have made something this simple and functional using only CSS, but there are a couple of problems:
+</p>
+<ol>
+  <li>the value of the input attribute alone is not enough: when it changes, we need the <em>property</em> (not available to CSS)</li>
+  <li>We then need to take that value and use it as a selector elsewhere (not possible in CSS - and obviously, custom <strong>properties</strong> will not work here)</li>
+</ol>
+<p>So, we need Javascript</p>
+  <p>And... we need one more thing: a <code>data-search</code> attribute on the element we wish to show/hide that contains the searchable text. To clarify, here is the (simplified) first element:</p>
+  <pre><code>&lt;div class="item" data-search="Proměnlivé křeslo"&gt;
+  &lt;div class="item-inner"&gt;
+    &lt;h3 class="item-heading"&gt;Proměnlivé křeslo&lt;/h3&gt;
+    ...
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+  <p>This is pretty unobtrusive and easy to generate!</p>
+  <h2>The Javascript</h2>
+  <p>A couple of things to note:</p>
+  <ul>
+    <li>The new style element is added on the DOM ready event here<sup>[1]</sup>, so if you want to populate the search on load (eg. so that users can get a link to a specific search), then it's best to do this when rendering the HTML (server-side). If you <em>must</em> use JS, then trigger a <code>keyup</code> event after populating the element.
+      <ol>
+        <li>It could be added earlier: when the element is ready (because the <code>head</code> element will be ready by this point), or even when the head element is available (but obviously the search.value will not be ready at this point)</li>
+      </ol>
+    </li>
+    <li>
+      The style modification which displays the results is made on the <code>keyup</code><sup>[1]</sup> event, after the user has entered more than 2 characters.
+      <ol>
+        <li>It might be nicer to use the <code>change</code> event, but this  is only triggered <a href="https://developer.mozilla.org/en-US/docs/Web/Events/change">when the input loses focus</a>. Which is awful in this use case 😄</li>
+      </ol>
+    </li>
+  </ul>
+  <p>Why not simply show/hide the elements using JS rather than repeatedly writing a new (very small) stylesheet?
+  <ul>
+    <li>Hey, why not?</li>
+    <li><strong>THIS NEEDS TESTING</strong> but I had the feeling that rather than writing to a number of DOM elements, amending a single text node in the head might be quicker. I also wondered whether using a CSS selector in JS might be slower than simply using CSS</li>
+  </ul>
+  <p>The final result is something that should be pretty fast in most cases, and is very adaptable (eg add the <code>data-search</code> element to a <code>&lt;tr&gt;</code> and you get a nice table filter)</p>
+</div>
+
+<script >const search = document.getElementById('csssearch');
+let styleblock = document.createElement('style');
+let stylerule = '[data-search] { display: none; } [data-search*="{{SEARCHSTRING}}" i] { display:block; }';
+
+if (search.value) {
+  styleblock.textContent = stylerule.replace('{{SEARCHSTRING}}', search.value);
+}
+document.head.appendChild(styleblock);
+
+search.addEventListener('keyup', function () {
+  let newStyleRule = search.value.length > 2 ? stylerule.replace('{{SEARCHSTRING}}', search.value) : '';
+  styleblock.textContent = newStyleRule;
+}, false)
+//# sourceURL=pen.js
+</script>
+</body></html>
