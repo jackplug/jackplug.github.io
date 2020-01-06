@@ -1,0 +1,156 @@
+:root {
+    --label-y: 50%;
+    --label-rotate: -45deg;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+html {
+    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+body {
+    background-color: #003;
+    color: #aaa;
+    padding: 2vh 2vw;
+    display: grid;
+    grid-gap: 2vw;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 500px));
+}
+
+h1 {
+    margin: 0;
+    writing-mode: sideways-lr;
+    grid-row: span 4;
+    font-size: 150px;
+    font-family: "Big Shoulders Display", monospace;
+    line-height: 150px;
+    opacity: 0.25;
+}
+
+.card {
+    background: #eee;
+    color: #444;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column-reverse;
+    padding: 10px;
+    position: relative;
+}
+
+.card dl, .card dt, .card dd {
+    margin: 0;
+    padding: 0;
+}
+
+.card dl {
+    display: grid;
+    grid-column-gap: 10px;
+    grid-template-columns: 2fr max-content 2fr;
+    align-items: end;
+}
+
+.card dt {
+    grid-column: 2;
+    font-weight: 600;
+    font-size: 0.8em;
+}
+
+.card dt::after {
+    content: ':';
+}
+
+.card dd {
+    grid-column: 3;
+    font-family: "Roboto Mono", monospace;
+}
+
+.card .agent-status, .card .agent-image, .card .agent-link {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+.card .agent-status + dd {
+    border: 1px solid;
+    position: absolute;
+    color: #1f4daf;
+    font-weight: bold;
+    font-size: 1.1em;
+    right: 30px;
+    top: 50%;
+    transform-origin: 50%;
+    transform: rotate(var(--label-rotate)) translateY(var(--label-y));
+    opacity: 0.3;
+}
+
+.card .agent-status + dd strong {
+    display: block;
+}
+
+.card .agent-image + dd {
+    grid-column: 1;
+    grid-row: 1 / span 5;
+    align-self: start;
+}
+
+.card .agent-link + dd {
+    grid-column: 2 / span 2;
+    align-self: end;
+    padding-top: 10px;
+}
+
+.card img {
+    max-width: 100%;
+}
+
+.card .agent-link + dd img {
+    max-height: 125px;
+    max-width: none;
+    width: auto;
+}
+
+.card footer {
+    position: relative;
+    background-color: #1f4daf;
+    color: #fff;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    font-family: "Big Shoulders Display", monospace;
+    text-transform: uppercase;
+}
+
+.card footer::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border: 1px dashed #fff;
+}
+
+.card footer em {
+    font-style: normal;
+    font-size: 64px;
+    line-height: 1;
+}
+
+.card footer span {
+    font-size: 30px;
+    line-height: 32px;
+}
