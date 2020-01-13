@@ -117,6 +117,8 @@ h1 {
     grid-column: 2 / span 2;
     align-self: end;
     padding-top: 10px;
+    display: flex;
+    align-items: flex-start;
 }
 
 .card img {
@@ -124,9 +126,15 @@ h1 {
 }
 
 .card .agent-link + dd img {
-    max-height: 100px;
-    max-width: none;
+    display: block;
+    max-width: 100%;
+    height: auto;
     width: auto;
+}
+
+.card .agent-link + dd>img {
+    max-width: 36px;
+    margin-left: auto;
 }
 
 .card footer {
