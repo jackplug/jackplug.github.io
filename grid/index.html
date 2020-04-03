@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+
+  <meta charset="UTF-8">
+  
+<link rel="apple-touch-icon" type="image/png" href="https://static.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png">
+<meta name="apple-mobile-web-app-title" content="CodePen">
+
+<link rel="shortcut icon" type="image/x-icon" href="https://static.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico">
+
+<link rel="mask-icon" type="" href="https://static.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111">
+
+
+  <title>CodePen - grid detail box layout</title>
+  
+  
+  
+  
+  
+<style>
+.a-hidden {
+  position: absolute;
+  left: -99999em;
+}
+
+p {
+  margin: 0;
+}
+
+#priceInfoNew {
+  max-width: 435px;
+  width: 100%;
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-bottom: none;
+  padding: 25px 30px;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: calc(50% - 7px) 14px calc(50% - 7px);
+  grid-template-columns: calc(50% - 7px) 14px calc(50% - 7px);
+}
+
+#priceInfoNew::before {
+  content: '';
+  display: block;
+  -ms-grid-column: 2;
+  grid-column: 2;
+  -ms-grid-row: 1;
+  -ms-grid-row-span: 2;
+  grid-row: 1 / span 2;
+}
+
+#priceInfoNew .price-block {
+  margin: 0;
+}
+
+#priceInfoNew .price-block.discount-box {
+  -ms-grid-row: 1;
+  -ms-grid-row-span: 2;
+  -ms-grid-column: 3;
+  grid-row: 1 / span 2;
+  -ms-grid-row-align: end;
+  align-self: end;
+}
+
+#priceInfoNew .price-block[id="blockOldPrice"] {
+  -ms-grid-column: 1;
+  grid-column: 1;
+  -ms-grid-row: 1;
+  grid-row: 1;
+  padding-bottom: 10px;
+}
+
+#productPrice {
+  -ms-grid-row: 2;
+}
+
+#priceInfoNew .price-block[id="blockAvailabilityDelivery"], #priceInfoNew .price-block[id="productBasketSubmit"], #priceInfoNew .price-block[id="productAvailabilityDescription"] {
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 3;
+  grid-column: 1 / span 3;
+}
+
+#blockAvailabilityDelivery {
+  -ms-grid-row: 3;
+}
+
+#productBasketSubmit {
+  -ms-grid-row: 4;
+}
+
+#productAvailabilityDescription {
+  -ms-grid-row: 5;
+}
+
+#priceExclVat {
+  display: block;
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+
+
+</head>
+
+<body translate="no">
+  <div id="priceInfoNew" class="clear">
+
+<p class="price-block discount-box">
+    <span class="block-header">Sleva:</span>
+    <span id="productSavingPercent">22</span>&nbsp;%
+    <br>
+    <span class="block-header">Ušetříte:</span>
+    <span id="productSavingAmount">1&nbsp;758&nbsp;Kč</span>
+</p>
+<p class="price-block" id="blockOldPrice">
+    <span class="block-header a-hidden">Původní cena:</span>
+    <span id="productOldPrice">
+        <del>7&nbsp;990&nbsp;Kč</del>
+    </span>
+</p>
+
+<p class="price-block" id="productPrice">
+    <strong id="priceSellingVat">6&nbsp;232&nbsp;Kč</strong>
+
+    s DPH
+
+            <span id="priceExclVat">
+            (<span id="price_selling">5&nbsp;150,41&nbsp;Kč</span>
+            bez DPH)
+        </span>
+    </p>
+<meta itemprop="price" content="6232.00">
+<meta itemprop="priceCurrency" content="CZK">
+
+<div class="price-block" id="blockAvailabilityDelivery">
+    <p class="availability">
+    <span class="block-header">Dostupnost:</span>
+
+    <strong class="stock available" id="product-stock"><abbr>Skladem</abbr></strong>
+</p>
+<p class="delivery-date-container" style="display:none">
+    <span class="block-header">Datum dodání:</span>
+    
+</p>
+</div>
+
+<input type="hidden" value="x" name="id">
+<input type="hidden" value="1" name="quantity">
+
+<div id="productBasketSubmit" class="price-block">
+    <button>
+        <i class="icon-shopping-cart"></i>
+<span class="button-text">Koupit</span>
+</button>
+</div>
+
+<div id="productAvailabilityDescription" class="price-block" style="display: none;"></div>
+</div>
+  
+  
+  
+  
+  
+  
+
+
+
+
+ 
+</body></html>
