@@ -1,0 +1,29 @@
+dl,
+dt,
+dd {
+  margin: 0;
+  padding: 0;
+}
+
+dl {
+  display: -ms-grid;
+  -ms-grid-columns: max-content 2% 1fr;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 2%;
+  row-gap: 5px;
+  max-width: 500px;
+}
+
+dt, dd {
+  padding: 5px;
+}
+
+dt {
+  background: #000;
+  color: #fff;
+}
+
+dd {
+  background: #eee;
+}
