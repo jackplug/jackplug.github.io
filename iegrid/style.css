@@ -5,7 +5,8 @@ dd {
   padding: 0;
 }
 
-dl {
+dl,
+body > div {
   display: -ms-grid;
   -ms-grid-columns: max-content 2% 1fr;
   display: grid;
@@ -15,15 +16,19 @@ dl {
   max-width: 500px;
 }
 
-dt, dd {
+body > div { margin-top: 20px; }
+
+dt, dd, div div {
   padding: 5px;
 }
 
-dt {
+dt,
+div > div:nth-child(odd) {
   background: #000;
   color: #fff;
 }
 
-dd {
+dd,
+div > div:nth-child(even) {
   background: #eee;
 }
