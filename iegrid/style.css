@@ -26,9 +26,11 @@ dt,
 div > div:nth-child(odd) {
   background: #000;
   color: #fff;
+  -ms-grid-column: 1;
 }
 
 dd,
 div > div:nth-child(even) {
   background: #eee;
+  -ms-grid-column: 3;
 }
