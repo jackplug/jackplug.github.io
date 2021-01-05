@@ -34,11 +34,23 @@
             display: inline-block;
             padding: 3px;
         }
+
+        .hidden {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            opacity: 0;
+        }
+
+        .hidden:focus {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
     <main>
         <h1>Demos for the Ruffle Flash player</h1>
+        <a class="hidden" href="./celebrity-swears.html">Celebrity Swears</a>
         <ul>
             <li><a href="./saturday-morning-watchmen.html">Saturday Morning Watchmen</a></li>
             <li><a href="./escape-from-retro-8bit-castle.html">Escape From Retro 8 Bit Castle</a></li>
@@ -53,7 +65,6 @@
             <li><a href="./badass-bonfire-song.html">The Badass Bonfire Song</a></li>
             <li><a href="./krentz-and-the-hand-of-shame-ep2.html">Krentz And The Hand Of Shame - Hepisode II</a></li>
             <li><a href="./question-of-love-quiz.html">The Question Of Love Quiz</a></li>
-            <li><a href="./celebrity-swears.html">Celebrity Swears</a></li>
         </ul>
     </main>
 </body>
