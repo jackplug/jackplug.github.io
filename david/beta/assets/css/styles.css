@@ -1,1 +1,29 @@
+:root {
+    --items-per-row: 1;
+    --page-padding: 5vw;
+}
+
+@media (min-width: 412px) {
+    :root {
+        --items-per-row: 2;
+    }
+}
+
+@media (min-width: 768px) {
+    :root {
+        --items-per-row: 3;
+    }
+}
+
+@media (min-width: 1024px) {
+    :root {
+        --items-per-row: 4;
+    }
+}
+
+@media (min-width: 1460px) {
+    :root {
+        --items-per-row: 5;
+    }
+}
 
