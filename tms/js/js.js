@@ -1,6 +1,6 @@
 // @TODOS:
 //     - styling
-//     - convert bytes size value to MB/GB
+//     ~- convert bytes size value to MB/GB~ OK DONE
 //     - add option to *attempt* to remove 'adult' results
 
 const tmsUrl = 'http://localhost:50123/search/';
@@ -8,26 +8,69 @@ const tmsForm = document.getElementById('tmsForm');
 const tmsResults = document.getElementById('tmsResults');
 
 let tmsCurrentResultsPage = 1;
+let noAdultResults = false;
+
+function isAdult(name) {
+    const filters = [
+        'xxx',
+        'nude',
+        'porn'
+    ];
+
+    let isAdult = false;
+
+    for (i in filters) {
+        let filterRegExp = new RegExp(filters[i], 'i');
+        if (name.match(filterRegExp)) {
+            isAdult = true;
+            break;
+        }
+    }
+
+    return isAdult;
+}
+
+function tmsRoundSize(size) {
+    const units = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+
+    if (size === 0) {
+        return 'n/a';
+    }
+
+    const i = parseInt(Math.floor(Math.log(size) / Math.log(1024)), 10);
+    if (i === 0) {
+        return `${size} ${units[i]})`;
+    }
+
+    return `${(size / (1024 ** i)).toFixed(1)} ${units[i]}`
+}
 
 function tmsProcessSearch(e) {
     e.preventDefault();
 
     let searchContent = {};
     let formData = new FormData(tmsForm);
-    for (var entry of formData.entries()) {
+    for (let entry of formData.entries()) {
+        console.log(entry[0]);
+        console.log(typeof entry[1]);
+        if (entry[0].indexOf('Checkbox') > -1) {
+            console.log('is checkbox');
+        }
         searchContent[entry[0]] = entry[1];
     }
+    return;
     tmsFetchResults(searchContent);
 }
 
 function tmsFetchResults(search) {
+    search.page = tmsCurrentResultsPage;
     let query = '?' + new URLSearchParams(search).toString();
     let req = new XMLHttpRequest();
     try {
         req.responseType = 'json';
         req.open('GET', tmsUrl + query, true);
         req.onload  = function() {
-            var jsonResponse = req.response;
+            let jsonResponse = req.response;
             tmsRenderResults(jsonResponse);
         };
         req.send(null);
@@ -40,23 +83,32 @@ function tmsRenderResults(content, error) {
     let html = '';
 
     if (error) {
-        html = `<li class="result-item result-error">
-                    ${content}
-                </li>`;
+        html = `<div class="result-item result-error">
+                    <dt>Error</dt>
+                    <dd>${content}</dd>
+                </div>`;
     } else {
-        // console.log(content);
-        console.log(content.length);
-        for (i in content) {
-            console.log(content[i]);
-            let theDate = new Date(content[i].uploaded_at);
-            let htmlSegment = `<li class="result-item">
-                                <strong class="result-item-name">${content[i].name}</strong>
-                                <span class="result-item-size">Size: ${content[i].size}</span><br>
-                                <span class="result-item-seeders">Seeders: ${content[i].seeders}</span> / <span class="result-item-leechers">Leechers: ${content[i].leechers}</span><br>
-                                <span class="result-item-source">Source: <a href="${content[i].canonical_url}">${content[i].source}</a></span><br>
-                                <span class="results-item-uploaded-at">Uploaded: ${theDate}</span>
-                            </li>`;
-            html += htmlSegment
+        if (content.length) {
+            for (i in content) {
+                let theDate = new Date(content[i].uploaded_at);
+                let size = parseInt(content[i].size, 10) > 1024 ? tmsRoundSize(content[i].size) : content[i].size;
+                let htmlSegment = `<div class="result-item">
+                                    <dt class="result-item-name">${content[i].name}</dt>
+                                    <dd class="result-item-size">Size: ${size}</dd>
+                                    <dd class="result-item-magnet-url"><a href="${content[i].magnet_url}">Magnet</a></dd>
+                                    <dd class="result-item-share-info">
+                                        <span class="result-item-seeders">Seeders: ${content[i].seeders}</span> /
+                                        <span class="result-item-leechers">Leechers: ${content[i].leechers}</span>
+                                    </dd>
+                                    <dd class="result-item-source">Source: <a href="${content[i].canonical_url}">${content[i].source}</a></dd>
+                                    <dd class="results-item-uploaded-at">Uploaded: ${theDate}</dd>
+                                </div>`;
+                html += htmlSegment
+            }
+        } else {
+            html = `<div class="result-item result-empty">
+                        <dt>No results</dt>
+                    </div>`;
         }
     }
 
