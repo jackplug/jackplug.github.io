@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMSearch - search local torrent/magnet database</title>
+    <link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAIukAES2/gAAMP4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARAzMwAAAAABERMzMzAAAAARETMzMzMRAiETMzMzMxEiIgMTMjMjESIhEREzMzABARERETERMAEAERETERMQAAAAACIiIiEAAAAREiIRERAAABEhIiEiIQAAESIiEiIRAAABESISAREAAAMzMzMzIgAAADMzMAIiAAAAAAAAAiKQ/wAAgB8AAMAAAACAAAAACAAAAAAGAACABgAAwAcAAPwDAADwAQAA8AAAAPAAAAD4CAAA+AAAAPwYAAD/+AAA" rel="icon" type="image/x-icon" />
+</head>
+<body>
+    <header>
+        <h1>Torrent/Magnet Search</h1>
+        <p>Local db service provided by <a href="https://github.com/sergiotapia/torrentinim">Torrentinim</a></p>
+    </header>
+    <main>
+        <form action="http://localhost:50123/search/" method="get" id="tmsForm">
+            <label for="tmsQuery">Search term</label>
+            <input type="search" name="query" id="tmsQuery">
+            <button type="submit">Search</button>
+        </form>
+
+        <ul id="tmsResults"></ul>
+    </main>
+
+    <script src="js/js.js"></script>
+</body>
+</html>
