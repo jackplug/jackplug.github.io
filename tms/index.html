@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TMSearch - search local torrent/magnet database</title>
     <link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAIukAES2/gAAMP4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARAzMwAAAAABERMzMzAAAAARETMzMzMRAiETMzMzMxEiIgMTMjMjESIhEREzMzABARERETERMAEAERETERMQAAAAACIiIiEAAAAREiIRERAAABEhIiEiIQAAESIiEiIRAAABESISAREAAAMzMzMzIgAAADMzMAIiAAAAAAAAAiKQ/wAAgB8AAMAAAACAAAAACAAAAAAGAACABgAAwAcAAPwDAADwAQAA8AAAAPAAAAD4CAAA+AAAAPwYAAD/+AAA" rel="icon" type="image/x-icon" />
+    <link rel="stylesheet" href="styling/css.css">
 </head>
 <body>
     <header>
@@ -13,12 +14,24 @@
     </header>
     <main>
         <form action="http://localhost:50123/search/" method="get" id="tmsForm">
+            <fieldset id="tmsSettings">
+                <label for="tmsAgeCheckbox">Below 18</label>
+                <input type="checkbox" name="tmsAgeCheckbox" id="tmsAgeCheckbox">
+            </fieldset>
             <label for="tmsQuery">Search term</label>
             <input type="search" name="query" id="tmsQuery">
             <button type="submit">Search</button>
         </form>
 
-        <ul id="tmsResults"></ul>
+        <section class="results-set-container">
+            <h2>Search results</h2>
+            <dl id="tmsResults" class="results-set">
+                <div class="result-item result-empty">
+                    <dt>try searching...</dt>
+                </div>
+            </dl>
+        </section>
+        <p><a href="#tmsSettings">Settings</a></p>
     </main>
 
     <script src="js/js.js"></script>
