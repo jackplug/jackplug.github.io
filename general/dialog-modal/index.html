@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Using &lt;dialog&gt; as a general purpose modal</title>
+    <link rel="stylesheet" href="dialog.css">
+</head>
+<body>
+    <h1>Using &lt;dialog&gt; as a general purpose modal</h1>
+    <p>The triggers use the following attributes:</p>
+    <ul>
+        <li><code>data-dialog</code> - the value is a jQuery/querySelector-style string specifying the dialog element</li>
+        <li><code>data-dialog-modal</code> - the value is a 'true'/'false' string specifying whether the dialog should behave as a true modal or just a 'pop-up'</li>
+    </ul>
+    <ul>
+        <li><button type="button" data-dialog="#defaultNonModal" data-dialog-modal="false">Non-modal dialog</button></li>
+        <li><button type="button" data-dialog="#defaultModal" data-dialog-modal="true">Modal dialog</button></li>
+    </ul>
+
+    <dialog id="defaultNonModal">
+        <p>it's a non-modal dialog!</p>
+    </dialog>
+
+    <dialog id="defaultModal">
+        <p>it's a MODAL dialog!</p>
+    </dialog>
+
+    <!-- <dialog id="defaultModal">
+        <h1>Do you want to delete everything?</h1>
+        <p>You will lose all your data.</p>
+        <button id="cancel-delete">Cancel</button>
+        <button id="confirm-delete">Delete!</button>
+    </dialog> -->
+
+    <script src="dialog.js"></script>
+</body>
+</html>
