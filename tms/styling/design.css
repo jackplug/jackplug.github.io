@@ -1,0 +1,68 @@
+:root {
+    --mainBG: #eff8ff;
+    --mainText: #555;
+    --borderRadiusBiggest: 20px;
+    --borderRadiusBig: 15px;
+    --borderRadiusSmall: 10px;
+    --borderRadiusSmallest: 5px;
+    --buttonDefault: #4992ff;
+}
+
+body {
+    background-color: var(--mainBG);
+    color: var(--mainText);
+    padding: var(--borderRadiusBig);
+}
+
+body > header,
+main,
+body > footer {
+    background-color: #fff;
+    padding: var(--borderRadiusBig);
+    border-radius: var(--borderRadiusBig);
+}
+
+body > header > *:first-child,
+main > *:first-child,
+body > footer > *:first-child {
+    margin-top: 0;
+}
+
+body > header > *:last-child,
+main > *:last-child,
+body > footer > *:last-child {
+    margin-bottom: 0;
+}
+
+body > header,
+body > footer {
+    text-align: center;
+}
+
+body > header h1 {
+    margin: 0;
+    font-weight: 300;
+    font-size: 2.5em;
+}
+
+body > header p {
+    margin: 0;
+}
+
+body > footer br {
+    display: none;
+}
+
+body > footer img {
+    display: inline-block;
+    vertical-align: middle;
+    margin: -10px 0;
+    position: relative;
+    top: -1px;
+}
+
+main fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}

@@ -6,21 +6,26 @@
     <title>TMSearch - search local torrent/magnet database</title>
     <link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAIukAES2/gAAMP4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARAzMwAAAAABERMzMzAAAAARETMzMzMRAiETMzMzMxEiIgMTMjMjESIhEREzMzABARERETERMAEAERETERMQAAAAACIiIiEAAAAREiIRERAAABEhIiEiIQAAESIiEiIRAAABESISAREAAAMzMzMzIgAAADMzMAIiAAAAAAAAAiKQ/wAAgB8AAMAAAACAAAAACAAAAAAGAACABgAAwAcAAPwDAADwAQAA8AAAAPAAAAD4CAAA+AAAAPwYAAD/+AAA" rel="icon" type="image/x-icon" />
     <link rel="stylesheet" href="styling/css.css">
+    <link rel="stylesheet" href="styling/design.css">
 </head>
 <body>
     <header>
-        <h1>Torrent/Magnet Search</h1>
-        <p>Local db service provided by <a href="https://github.com/sergiotapia/torrentinim">Torrentinim</a></p>
+        <h1>TMSearch</h1>
+        <p>A local torrent/magnet search service assisted by the <a href="https://github.com/sergiotapia/torrentinim">Torrentinim</a> database.</p>
     </header>
     <main>
         <form action="http://localhost:50123/search/" method="get" id="tmsForm">
             <fieldset id="tmsSettings">
-                <label for="tmsAgeCheckbox">Below 18</label>
-                <input type="checkbox" name="tmsAgeCheckbox" id="tmsAgeCheckbox" checked>
+                <span class="checkbox">
+                    <input type="checkbox" name="tmsAgeCheckbox" id="tmsAgeCheckbox" checked>
+                    <label for="tmsAgeCheckbox">Below 18</label>
+                </span>
             </fieldset>
-            <label for="tmsQuery">Search term</label>
-            <input type="search" name="query" id="tmsQuery">
-            <button type="submit">Search</button>
+            <div>
+                <label for="tmsQuery">Search term</label>
+                <input type="search" name="query" id="tmsQuery">
+                <button type="submit">Search</button>
+            </div>
         </form>
 
         <section class="results-set-container">
