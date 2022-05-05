@@ -1,20 +1,26 @@
 // @TODOS:
 //     - styling
 //     ~- convert bytes size value to MB/GB~ OK DONE
-//     - add option to *attempt* to remove 'adult' results
+//     - add option to *attempt* to remove 'adult' results (DEFAULT TO REMOVE!) - PARTIALLY DONE (check '18' words)
 
 const tmsUrl = 'http://localhost:50123/search/';
 const tmsForm = document.getElementById('tmsForm');
 const tmsResults = document.getElementById('tmsResults');
 
 let tmsCurrentResultsPage = 1;
-let noAdultResults = false;
+
+let tmsSettings = {
+    ageCheck: document.getElementById('tmsAgeCheckbox')
+};
+
+let tmsNoAdultResults = tmsSettings.ageCheck.checked;
 
 function isAdult(name) {
     const filters = [
         'xxx',
         'nude',
-        'porn'
+        'porn',
+        'fuck'
     ];
 
     let isAdult = false;
@@ -37,7 +43,7 @@ function tmsRoundSize(size) {
         return 'n/a';
     }
 
-    const i = parseInt(Math.floor(Math.log(size) / Math.log(1024)), 10);
+    let i = parseInt(Math.floor(Math.log(size) / Math.log(1024)), 10);
     if (i === 0) {
         return `${size} ${units[i]})`;
     }
@@ -51,14 +57,12 @@ function tmsProcessSearch(e) {
     let searchContent = {};
     let formData = new FormData(tmsForm);
     for (let entry of formData.entries()) {
-        console.log(entry[0]);
-        console.log(typeof entry[1]);
         if (entry[0].indexOf('Checkbox') > -1) {
-            console.log('is checkbox');
+            continue;
         }
         searchContent[entry[0]] = entry[1];
     }
-    return;
+
     tmsFetchResults(searchContent);
 }
 
@@ -90,6 +94,10 @@ function tmsRenderResults(content, error) {
     } else {
         if (content.length) {
             for (i in content) {
+                if (tmsNoAdultResults && isAdult(content[i].name)) {
+                    continue;
+                }
+
                 let theDate = new Date(content[i].uploaded_at);
                 let size = parseInt(content[i].size, 10) > 1024 ? tmsRoundSize(content[i].size) : content[i].size;
                 let htmlSegment = `<div class="result-item">
@@ -103,7 +111,7 @@ function tmsRenderResults(content, error) {
                                     <dd class="result-item-source">Source: <a href="${content[i].canonical_url}">${content[i].source}</a></dd>
                                     <dd class="results-item-uploaded-at">Uploaded: ${theDate}</dd>
                                 </div>`;
-                html += htmlSegment
+                html += htmlSegment;
             }
         } else {
             html = `<div class="result-item result-empty">
@@ -116,4 +124,7 @@ function tmsRenderResults(content, error) {
 }
 
 tmsForm.addEventListener('submit', tmsProcessSearch);
+tmsSettings.ageCheck.addEventListener('click', function () {
+    tmsNoAdultResults = tmsSettings.ageCheck.checked;
+});
 
