@@ -2,14 +2,20 @@
 //     - styling
 //     ~- convert bytes size value to MB/GB~ OK DONE
 //     - add option to *attempt* to remove 'adult' results (DEFAULT TO REMOVE!) - PARTIALLY DONE (check '18' words)
+//     - search (partial or full word) -- ??
+//     - search (check for ' '/'.'/'-'/'_' separators)
 //     - pagination - BASIC PAGING OK
 
+const omdbApiKey = '#######';
+const obdbApiUrl = 'http://www.omdbapi.com/'; // Usage ?s=moon knight&apikey= - see https://www.omdbapi.com/
 const tmsUrl = 'http://localhost:50123/search/';
 const tmsForm = document.getElementById('tmsForm');
 const tmsLoadMore = document.getElementById('tmsLoadMore');
 const tmsResults = document.getElementById('tmsResults');
 
 let tmsCurrentResultsPage = 1;
+// let tmsFirstResultName = null;
+let tmsResultsStore = [];
 
 let tmsSettings = {
     ageCheck: document.getElementById('tmsAgeCheckbox')
@@ -22,20 +28,24 @@ function isAdult(name) {
         'xxx',
         'nude',
         'porn',
-        'fuck'
+        'fuck',
+        'hardcore',
+        'ass',
+        'cock',
+        'squirt',
+        'milf',
+        'carnage'
     ];
-
-    let isAdult = false;
 
     for (i in filters) {
         let filterRegExp = new RegExp(filters[i], 'i');
-        if (name.match(filterRegExp)) {
-            isAdult = true;
-            break;
+
+        if (filterRegExp.test(name)) {
+            return true;
         }
     }
 
-    return isAdult;
+    return false;
 }
 
 function tmsRoundSize(size) {
@@ -100,26 +110,22 @@ function tmsRenderResults(content, error) {
                 </div>`;
     } else {
         if (content.length) {
-            for (i in content) {
-                if (tmsNoAdultResults && isAdult(content[i].name)) {
-                    continue;
-                }
-
-                let theDate = new Date(content[i].uploaded_at);
-                let size = parseInt(content[i].size, 10) > 1024 ? tmsRoundSize(content[i].size) : content[i].size;
-                let htmlSegment = `<div class="result-item">
-                                    <dt class="result-item-name">${content[i].name}</dt>
-                                    <dd class="result-item-size">Size: ${size}</dd>
-                                    <dd class="result-item-magnet-url"><a href="${content[i].magnet_url}">Magnet</a></dd>
-                                    <dd class="result-item-share-info">
-                                        <span class="result-item-seeders">Seeders: ${content[i].seeders}</span> /
-                                        <span class="result-item-leechers">Leechers: ${content[i].leechers}</span>
-                                    </dd>
-                                    <dd class="result-item-source">Source: <a href="${content[i].canonical_url}">${content[i].source}</a></dd>
-                                    <dd class="results-item-uploaded-at">Uploaded: ${theDate}</dd>
-                                </div>`;
-                html += htmlSegment;
-            }
+            content
+                .filter(item => !(tmsNoAdultResults && isAdult(item.name)))
+                .forEach(item => {
+                    let htmlSegment = `<div class="result-item">
+                                        <dt class="result-item-name">${item.name}</dt>
+                                        <dd class="result-item-size">Size: ${parseInt(item.size, 10) > 1024 ? tmsRoundSize(item.size) : item.size}</dd>
+                                        <dd class="result-item-magnet-url"><a href="${item.magnet_url}">Magnet</a></dd>
+                                        <dd class="result-item-share-info">
+                                            <span class="result-item-seeders">Seeders: ${item.seeders}</span> /
+                                            <span class="result-item-leechers">Leechers: ${item.leechers}</span>
+                                        </dd>
+                                        <dd class="result-item-source">Source: <a href="${item.canonical_url}">${item.source}</a></dd>
+                                        <dd class="results-item-uploaded-at">Uploaded: ${new Date(item.uploaded_at)}</dd>
+                                    </div>`;
+                    html += htmlSegment;
+                });
         } else {
             html = `<div class="result-item result-empty">
                         <dt>No results</dt>
