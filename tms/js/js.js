@@ -2,9 +2,11 @@
 //     - styling
 //     ~- convert bytes size value to MB/GB~ OK DONE
 //     - add option to *attempt* to remove 'adult' results (DEFAULT TO REMOVE!) - PARTIALLY DONE (check '18' words)
+//     - pagination - BASIC PAGING OK
 
 const tmsUrl = 'http://localhost:50123/search/';
 const tmsForm = document.getElementById('tmsForm');
+const tmsLoadMore = document.getElementById('tmsLoadMore');
 const tmsResults = document.getElementById('tmsResults');
 
 let tmsCurrentResultsPage = 1;
@@ -52,7 +54,10 @@ function tmsRoundSize(size) {
 }
 
 function tmsProcessSearch(e) {
-    e.preventDefault();
+    if (e.type === 'submit') {
+        e.preventDefault();
+        tmsCurrentResultsPage = 1;
+    }
 
     let searchContent = {};
     let formData = new FormData(tmsForm);
@@ -68,7 +73,7 @@ function tmsProcessSearch(e) {
 
 function tmsFetchResults(search) {
     search.page = tmsCurrentResultsPage;
-    let query = '?' + new URLSearchParams(search).toString();
+    let query = '?' + new URLSearchParams(search).toString() + '&page=' + tmsCurrentResultsPage;
     let req = new XMLHttpRequest();
     try {
         req.responseType = 'json';
@@ -76,6 +81,8 @@ function tmsFetchResults(search) {
         req.onload  = function() {
             let jsonResponse = req.response;
             tmsRenderResults(jsonResponse);
+
+            tmsCurrentResultsPage++;
         };
         req.send(null);
     } catch (error) {
@@ -124,6 +131,7 @@ function tmsRenderResults(content, error) {
 }
 
 tmsForm.addEventListener('submit', tmsProcessSearch);
+tmsLoadMore.addEventListener('click', tmsProcessSearch);
 tmsSettings.ageCheck.addEventListener('click', function () {
     tmsNoAdultResults = tmsSettings.ageCheck.checked;
 });
