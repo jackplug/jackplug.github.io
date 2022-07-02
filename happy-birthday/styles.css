@@ -24,10 +24,10 @@ img {
     position: relative;
     height: 80vh;
     width: 60vh;
-    border: 10px solid #73BFB5;
+    border: 10px solid #fff;
     margin: 0 auto;
-    box-shadow: inset 10px 0px 15px 0px rgba(0, 0, 0, 0.1);
-    background-color: #e6f0e6;
+    box-shadow: 10px 0px 15px 0px rgb(0 0 0 / 30%);
+    background-color: #fff;
 }
 
 .card .text-container {
@@ -60,9 +60,9 @@ img {
     width: 100%;
     height: 100%;
     margin: -10px 0px 0px -10px;
-    border: 10px solid #73BFB5;
+    border: 10px solid #fff;
     backface-visibility: hidden;
-    background-color: #73a3bf;
+    background-color: #fff;
     background-size: contain;
     transform-style: preserve-3d;
     transform-origin: 0% 50%;
@@ -83,7 +83,7 @@ img {
     width: calc(100% - 10px);
     background: rgba(0, 0, 0, 0.2);
     color: #fff;
-    animation-duration: 3s;
+    animation-duration: 1.5s;
     animation-name: fadein;
 }
 
@@ -103,23 +103,23 @@ img {
 
 .card:hover .front {
     transform: perspective(160vh) rotateY(-170deg);
-    background-color: #41718d;
+    background-color: #fff;
 }
 
 .card:hover .back {
     transform: perspective(160vh) rotateY(-170deg);
-    box-shadow: 7px 0px 5px 0px rgba(0, 0, 0, 0.3), inset 2px 0px 15px 0px rgba(0, 0, 0, 0.1);
-    background-color: #d2dcd2;
+    box-shadow: 7px 0px 5px 0px rgba(0, 0, 0, 0.3);
+    background-color: #fff;
 }
 
 .card .back {
     position: absolute;
     width: 100%;
     height: 100%;
-    border: 10px solid #73BFB5;
+    border: 10px solid #fff;
     margin: -10px 0px 0px -10px;
     backface-visibility: visible;
-    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
     transform-style: preserve-3d;
     transform-origin: 0% 50%;
     transform: perspective(160vh) rotateY(0deg);
