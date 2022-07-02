@@ -1,17 +1,31 @@
-
 html, body {
     overflow: hidden;
-    background-color: #bf737d;
+    background-color: #fff;
     width: 100%;
     height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+img {
+    display: block;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
 }
 
 .card {
     position: relative;
-    width: 300px;
-    height: 425px;
+    height: 80vh;
+    width: 60vh;
     border: 10px solid #73BFB5;
-    margin: 50px auto 0 auto;
+    margin: 0 auto;
     box-shadow: inset 10px 0px 15px 0px rgba(0, 0, 0, 0.1);
     background-color: #e6f0e6;
 }
@@ -50,21 +64,20 @@ html, body {
     border: 10px solid #73BFB5;
     backface-visibility: hidden;
     background-color: #73a3bf;
-    /* background-image: url($cover-image); */
     background-size: contain;
     transform-style: preserve-3d;
     transform-origin: 0% 50%;
-    transform: perspective(800px) rotateY(0deg);
+    transform: perspective(160vh) rotateY(0deg);
     transition: all 0.8s ease-in-out;
 }
 
 .card:hover .front {
-    transform: perspective(800px) rotateY(-170deg);
+    transform: perspective(160vh) rotateY(-170deg);
     background-color: #41718d;
 }
 
 .card:hover .back {
-    transform: perspective(800px) rotateY(-170deg);
+    transform: perspective(160vh) rotateY(-170deg);
     box-shadow: 7px 0px 5px 0px rgba(0, 0, 0, 0.3), inset 2px 0px 15px 0px rgba(0, 0, 0, 0.1);
     background-color: #d2dcd2;
 }
@@ -79,7 +92,7 @@ html, body {
     filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
     transform-style: preserve-3d;
     transform-origin: 0% 50%;
-    transform: perspective(800px) rotateY(0deg);
+    transform: perspective(160vh) rotateY(0deg);
     transition: all 0.8s ease-in-out;
     background-color: #e6f0e6;
     box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.1);
