@@ -41,7 +41,6 @@ img {
 }
 
 .card .text-container #head {
-    /* font-family: "Nobile", sans-serif; */
     font-size: 1.5em;
     margin: 60px auto 60px auto;
 }
@@ -74,17 +73,16 @@ img {
 .card .front .top,
 .card .front .bottom {
     font-family: 'Square Peg', cursive;
-    line-height: 1.3;
+    line-height: 0.9;
     font-size: 50px;
     font-weight: 700;
-    padding: 5px;
+    padding: 15px 5px;
     text-align: center;
     position: absolute;
     left: 0;
     width: calc(100% - 10px);
     background: rgba(0, 0, 0, 0.2);
-    color: red;
-    text-shadow: 0 0 3px rgba(255, 255, 255, 0.4);
+    color: #fff;
 }
 
 .card .front .top {
