@@ -83,6 +83,14 @@ img {
     width: calc(100% - 10px);
     background: rgba(0, 0, 0, 0.2);
     color: #fff;
+    animation-duration: 3s;
+    animation-name: fadein;
+}
+
+@keyframes fadein {
+    0% { opacity: 0; }
+    80% { opacity: 0; }
+    100% { opacity: 1; }
 }
 
 .card .front .top {
