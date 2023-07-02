@@ -23,6 +23,15 @@ img {
     object-fit: cover;
 }
 
+.front .info {
+    margin: 0;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transform: rotate(-90deg) translateX(100%);
+    transform-origin: right bottom;
+}
+
 .names img {
     max-width: 100%;
     height: auto;
