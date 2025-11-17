@@ -1,0 +1,773 @@
+/*
+   stylesheet section reference:
+   -----------------------------
+   'zero all' - get browsers 'singing from the same hymnsheet'!
+   'basic layout' - general structure
+   'header'
+   'footer'
+   'menu'
+   'search'
+   'Google Ad'
+   'Creative Commons Licence'
+   'main content' - common site-wide style rules within the main content area
+
+   Page Specific Rules
+        'home'
+        'article'
+        'about'
+        'clubs & countries'
+        'all coaches'
+        'contact'
+*/
+
+
+
+/* +++++++++ zero all +++++++++ */
+* {
+    margin: 0;
+    padding: 0;
+}
+/* --------- zero all --------- */
+
+
+
+/* +++++++++ basic layout +++++++++ */
+body {
+    background: #fff url(imgs/bg_green.jpg) 0 0;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 76%;
+    color: #5e574b;
+}
+
+div#wrapper {
+    position: relative;
+    width: 740px;
+    left: 50%;
+    margin-left: -370px;
+    background: transparent url(imgs/pagebg.jpg) no-repeat 0 0;
+}
+
+div#header {
+}
+
+div#content {
+    float: right;
+    width: 580px;
+    padding-top: 5px;
+    padding-bottom: 3.5em;
+    position: relative;
+}
+
+div#sidebar {
+    width: 155px;
+}
+
+div#footer {
+    height: 70px;
+    background: transparent url(imgs/pagebg.jpg) no-repeat 0 100%;
+}
+/* --------- basic layout --------- */
+
+
+
+/* +++++++++ header +++++++++ */
+div#header h1 {
+    padding-top: 20px;
+    text-align: center;
+    text-indent: -9999px;
+    background: url(imgs/headerElBombin.gif) no-repeat 50% 22px;
+    height: 74px;
+}
+
+div#header h2 {
+    background: url(imgs/subheaderTalesOf.gif) no-repeat 49% 0;
+    text-align: center;
+    text-indent: -9999px;
+    height: 14px;
+}
+
+div#header h3 {
+    margin: 5px 32px 0 32px;
+    border-top: 1px solid #dfcfb8;
+    border-bottom: 1px solid #dfcfb8;
+    text-align: center;
+    font-size: 0.8em;
+    font-weight: normal;
+    letter-spacing: 1px;
+    color: #8f7f68;
+}
+
+div#header h3 span {
+    display: block;
+    text-align: right;
+    margin-top: -1.2em;
+}
+/* --------- header --------- */
+
+
+
+/* +++++++++ footer +++++++++ */
+div#footer p {
+    font-size: 0.8em;
+    text-align: center;
+    margin: 0 32px;
+    padding-top: 10px;
+    border-top: 1px solid #cfbfa8;
+}
+/* --------- footer --------- */
+
+
+
+/* +++++++++ menu +++++++++ */
+ul#menu {
+    margin-left: 32px;
+    padding-top: 10px;
+    list-style-type: none;
+    font-size: 0.9em;
+    color: #8e877b;
+}
+
+ul#menu li {
+    text-align: right;
+}
+
+ul#menu li a {
+    display: block;
+    padding: 1px 0;
+    text-decoration: none;
+}
+
+ul#menu li a:link, ul#menu li a:visited {
+    color: #4e473b;
+    background-color: transparent;
+}
+
+ul#menu li a:hover, ul#menu li a:active {
+    color: #fff0d3;
+    background-color: #70695c;
+}
+
+ul#menu li a#allCoaches {
+    font-size: 1.1em;
+    font-variant: small-caps;
+    font-weight: bold;
+}
+
+ul#menu li ul {
+    padding-bottom: 5px;
+    margin-right: 5px;
+    list-style-type: none;
+}
+
+ul#menu li ul#coachList {
+    /* display: none; */
+}
+
+
+body#homePage ul#menu li a#home:link, body#homePage ul#menu li a#home:visited,
+body#allCoachesPage ul#menu li a#allCoaches:link, body#allCoachesPage ul#menu li a#allCoaches:visited,
+body#contactPage ul#menu li a#contact:link, body#contactPage ul#menu li a#contact:visited,
+body#aboutPage ul#menu li a#about:link, body#aboutPage ul#menu li a#about:visited,
+body#clubCountryPage ul#menu li a#clubCountry:link, body#clubCountryPage ul#menu li a#clubCountry:visited {
+    color: #fff0d3;
+    background-color: #90897c;
+}
+/* --------- menu --------- */
+
+
+
+/* +++++++++ search +++++++++ */
+/* div#sidebar form {
+    margin-top: 10px;
+    margin-left: 32px;
+    text-align: right;
+}
+
+div#sidebar fieldset {
+    border: none;
+}
+
+div#sidebar label {
+    background-color: #90897c;
+    border-top: 1px solid #c9bfaf;
+    border-left: 1px solid #c9bfaf;
+    border-right: 1px solid #c9bfaf;
+    padding: 1px 4px 1px 3px;
+    font-size: 0.9em;
+    font-variant: small-caps;
+    color: #fff0d3;
+}
+
+div#sidebar form input {
+    width: auto;
+    border: 1px solid #392f1f;
+    margin-top: 1px;
+    padding: 0 2px;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 0.9em;
+    font-variant: small-caps;
+    letter-spacing: 1px;
+    background-color: #90897c;
+    color: #fff;
+}
+
+div#sidebar form fieldset input {
+    width: 118px;
+    height: 1.5em;
+    border: 1px solid #c9bfaf;
+    padding: 0;
+    font-size: 1em;
+    font-variant: normal;
+    letter-spacing: 1px;
+    background-color: #fff5ef;
+    color: #5e574b;
+} */
+/* --------- search --------- */
+
+
+
+/* +++++++++ Google Ad +++++++++ */
+div#advert {
+    margin-top: 10px;
+    margin-left: 32px;
+    text-align: center;
+}
+
+div#advert h3 {
+    font-size: 0.75em;
+    text-transform: uppercase;
+}
+/* --------- Google Ad --------- */
+
+
+
+/* +++++++++ Creative Commons Licence +++++++++ */
+p#cclicence {
+    margin-top: 20px;
+    margin-left: 32px;
+    margin-bottom: 5px;
+    text-align: center;
+    font-variant: small-caps;
+    font-size: 0.9em;
+    line-height: 1.4em;
+}
+
+p#cclicence a {
+    text-decoration: none;
+}
+
+p#cclicence a:link {
+    color: #000;
+    border-bottom: 1px solid #da0;
+}
+
+p#cclicence a:visited {
+    color: #845;
+    border-bottom: 1px solid #838;
+}
+
+p#cclicence a:hover, p#cclicence a:active {
+    color: #555;
+    border-bottom: 1px solid #955;
+}
+/* --------- Creative Commons Licence --------- */
+
+
+
+/* +++++++++ main content +++++++++ */
+div#content a {
+    text-decoration: none;
+}
+
+div#content p {
+    font-size: 1em;
+    line-height: 1.5em;
+    text-align: justify;
+    margin: 0 35px 1em 5px;
+}
+
+div#content a:link {
+    color: #000;
+    border-bottom: 1px solid #da0;
+}
+
+div#content a:visited {
+    color: #845;
+    border-bottom: 1px solid #838;
+}
+
+div#content a:hover, div#content a:active {
+    color: #555;
+    border-bottom: 1px solid #555;
+}
+
+div#content p.introduction {
+    font-weight: bold;
+    font-size: 1.3em;
+    font-variant: small-caps;
+    line-height: 1.1em;
+    text-align: left;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    color: #6e675b;
+}
+
+div#content p.more {
+    font-style: italic;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #c9bfaf;
+    margin-top: -10px;
+}
+
+div#content h1 {
+    text-transform: uppercase;
+    font-size: 4.1em;
+    letter-spacing: -2px;
+    line-height: 1em;
+    text-align: left;
+    color: #70696c;
+    margin-left: 4px;
+    margin-right: 32px;
+}
+
+div#content h2 {
+    text-transform: uppercase;
+    font-size: 3.8em;
+    letter-spacing: -2px;
+    line-height: 0.9em;
+    text-align: left;
+    margin-left: 5px;
+}
+
+div#content h2 a:link, div#content h2 a:visited {
+    color: #70696c;
+    border: none;
+}
+
+div#content h2 a:hover, div#content h2 a:active {
+    color: #60595c;
+    border: none;
+}
+
+div#content div.articleAssociatedInfo {
+    float: right;
+    width: 200px;
+    margin: 5px 34px 0 0.5em;
+    text-align: center;
+}
+
+body#articlePage div#content div.articleAssociatedInfo {
+    border-bottom: 1px solid #d9cfbf;
+}
+
+div#content div.articleAssociatedInfo img {
+    border: 1px solid #c9bfaf;
+    background-color: #f4e3c5;
+    padding: 3px;
+}
+
+div#content div.articleAssociatedInfo p {
+    margin: -4px 0 0 0;
+    text-align: center;
+    font-size: 0.9em;
+    line-height: 1.3em;
+}
+
+div#content div.articleAssociatedInfo dl {
+    font-size: 1.1em;
+    text-align: left;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-left: 1px solid #d9cfbf;
+}
+
+div#content div.articleAssociatedInfo dt {
+    margin: 0 4px;
+    font-variant: small-caps;
+    font-weight: bold;
+    float: left;
+    clear: left;
+}
+
+div#content div.articleAssociatedInfo dd {
+    margin: 0 0 4px 8px;
+
+}
+
+div#content p#credits {
+    clear: both;
+    position: absolute;
+    width: 540px;
+    top: auto;
+    bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-variant: small-caps;
+    font-size: 0.9em;
+    line-height: 2.5em;
+    text-align: center;
+    border-top: 1px solid #dfcfb8;
+    z-index: 5;
+}
+/* --------- main content --------- */
+
+
+
+/* +++++++++ home +++++++++ */
+div#latestEntry {
+    font-size: 1em;
+    width: 250px;
+    float: left;
+    border-right: 1px solid #c9bfaf;
+    margin-bottom: 5px;
+}
+
+div#latestEntry h3 {
+    font-size: 1.5em;
+    text-transform: uppercase;
+    margin: 0 7px 0 5px;
+}
+
+div#latestEntry h3 a:link, div#latestEntry h3 a:visited {
+    color: #70696c;
+    border: none;
+}
+
+div#latestEntry h3 a:hover, div#latestEntry h3 a:active {
+    color: #60595c;
+    border: none;
+}
+
+div#latestEntry p {
+    margin-right: 7px;
+}
+
+div#latestEntry p.more {
+    font-style: italic;
+    padding: 0;
+    margin-top: -13px;
+    border-bottom: none;
+}
+
+div#latestEntry p.introduction {
+    text-align: justify;
+    font-size: 1.1em;
+    line-height: 1.2em;
+    margin-top: 0.3em;
+    margin-bottom: 0.3em;
+}
+
+div#siteNews {
+    border-bottom: 1px solid #c9bfaf;
+}
+
+div#canUHelp p, div#siteNews p {
+    margin-right: 0;
+}
+
+div#canUHelp, div#siteNews {
+    margin-left: 253px;
+    margin-right: 40px;
+    margin-bottom: 5px;
+}
+
+div#canUHelp h3, div#siteNews h3 {
+    font-size: 1.3em;
+    text-transform: uppercase;
+    margin: 0 7px 0 4px;
+}
+/* --------- home --------- */
+
+
+
+/* +++++++++ article +++++++++ */
+div#sources {
+    clear: both;
+    float: left;
+    width: 300px;
+    border-top: 1px solid #c9bfaf;
+    border-right: 1px solid #c9bfaf;
+}
+
+div#sources h2 {
+    margin-top: 5px;
+    font-size: 1.3em;
+    letter-spacing: normal;
+}
+
+div#sources ul {
+    margin-top: 5px;
+    margin-left: 20px;
+}
+
+div#sources li {
+    margin-bottom: 7px;
+    margin-right: 5px;
+    line-height: 1.5em;
+}
+
+div#updateForm {
+    float: left;
+    width: 244px;
+    margin-left: -1px;
+    border-top: 1px solid #c9bfaf;
+    border-left: 1px solid #d7c2a5;
+}
+
+div#updateForm p {
+    margin-right: 0;
+    margin-left: 6px;
+    font-size: 0.9em;
+    line-height: 1.2em;
+}
+
+div#updateForm fieldset {
+    margin-top: 3px;
+    border: none;
+}
+
+div#updateForm fieldset legend {
+    padding-left: 5px;
+    font-size: 1.2em;
+    font-weight: bold;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+}
+
+div#updateForm fieldset label {
+    padding-left: 5px;
+    font-variant: small-caps;
+}
+
+div#updateForm fieldset br {
+    display: none;
+}
+
+div#updateForm form input {
+    width: auto;
+    border: 1px solid #392f1f;
+    margin-top: 1px;
+    padding: 0 2px;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 0.9em;
+    font-variant: small-caps;
+    letter-spacing: 1px;
+    background-color: #90897c;
+    color: #fff;
+}
+
+div#updateForm fieldset input, div#updateForm fieldset textarea {
+    display: block;
+    width: 230px;
+    margin-left: 8px;
+    border: 1px solid #c9bfaf;
+    padding: 1px;
+    font-size: 1em;
+    font-family: "Times New Roman", Times, serif;
+    font-variant: normal;
+    letter-spacing: 1px;
+    background-color: #fff5ef;
+    color: #5e574b;
+}
+
+div#updateForm fieldset input[type="hidden"] {
+    display: none;
+}
+
+div#updateForm fieldset p#formInfoExample {
+    display: inline;
+}
+
+@media all and (min-width: 0px){
+   div#updateForm fieldset p#formInfoExample {
+    display: block;
+    float: right;
+    width: auto;
+    margin: 0 5px 0 0;
+    padding: 0;
+   }
+}
+
+div#updateForm fieldset p#formInfoExample a:link span, div#updateForm fieldset p#formInfoExample a:visited span {
+    display: none;
+}
+
+div#updateForm fieldset p#formInfoExample a:hover span, div#updateForm fieldset p#formInfoExample a:active span {
+    display: block;
+    position: absolute;
+    width: 25em;
+    right: 35%;
+    text-align: left;
+    font-size: 1.1em;
+    line-height: 1.4em;
+    background-color: #eeddbf;
+    padding: 5px;
+    border: 4px double #70695c;
+    z-index: 10;
+}
+
+div#updateForm fieldset p#formInfoExample a span br {
+    display: block;
+}
+
+div#updateForm form div {
+    width: 230px;
+    margin-left: 12px;
+    text-align: right;
+}
+/* --------- article --------- */
+
+
+
+/* +++++++++ about +++++++++ */
+body#aboutPage div#content h2 {
+    margin-top: 8px;
+    margin-bottom: 2px;
+    font-size: 1.5em;
+    letter-spacing: normal;
+}
+/* --------- about --------- */
+
+
+
+/* +++++++++ clubs & countries +++++++++ */
+body#clubCountryPage div#content h2 {
+    margin-top: 8px;
+    margin-bottom: 2px;
+    margin-left: 0;
+    font-size: 1.4em;
+    letter-spacing: normal;
+}
+
+body#clubCountryPage div#content h3 {
+    margin-bottom: 2px;
+    font-size: 1.3em;
+    letter-spacing: normal;
+}
+
+div#countries, div#clubs {
+    width: 260px;
+    float: left;
+    margin-bottom: 80px;
+    margin-left: 20px;
+}
+
+div#countries ul, div#clubs ul {
+    list-style-type: none;
+    font-size: 1em;
+    font-weight: normal;
+    line-height: 1.6em;
+    text-transform: none;
+}
+
+div#countries ul a:link, div#clubs ul a:link {
+    color: #000;
+    border-bottom: 1px solid #da0;
+}
+
+div#countries ul a:visited, div#clubs ul a:visited {
+    color: #845;
+    border-bottom: 1px solid #838;
+}
+
+div#countries ul a:hover, div#countries ul a:active, div#clubs ul a:hover, div#clubs ul a:hover {
+    color: #555;
+    border-bottom: 2px solid #755;
+}
+
+body#clubCountryPage div#content dl {
+    margin-left: 20px;
+}
+
+body#clubCountryPage div#content dt {
+    margin-top: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+body#clubCountryPage div#content dd {
+    margin-top: 4px;
+    margin-left: 10px;
+    font-size: 1.1em;
+}
+
+body#clubCountryPage div#content dd p {
+    margin-left: 100px;
+    font-size: 1.1em;
+}
+/* --------- clubs & countries --------- */
+
+
+
+/* +++++++++ all coaches +++++++++ */
+dl#coachSummary {
+    margin: 15px 40px 5px 15px;
+}
+
+dl#coachSummary dt {
+    margin-bottom: 3px;
+    font-size: 1.5em;
+    text-transform: uppercase;
+}
+
+dl#coachSummary dd {
+    font-size: 1.1em;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #d7c2a5;
+}
+/* --------- all coaches --------- */
+
+
+
+/* +++++++++ contact +++++++++ */
+div#contactForm {
+    margin: 10px 0 10px 100px;
+}
+
+div#contactForm fieldset {
+    border: none;
+}
+
+div#contactForm fieldset label {
+    font-variant: small-caps;
+}
+
+div#contactForm fieldset br {
+    display: none;
+}
+
+div#contactForm form input {
+    width: auto;
+    border: 1px solid #392f1f;
+    margin-bottom: 20px;
+    padding: 0 2px;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 0.9em;
+    font-variant: small-caps;
+    letter-spacing: 1px;
+    background-color: #90897c;
+    color: #fff;
+}
+
+div#contactForm fieldset input, div#contactForm fieldset textarea {
+    display: block;
+    width: 300px;
+    margin-left: 28px;
+    margin-right: 0;
+    border: 1px solid #c9bfaf;
+    padding: 1px;
+    font-size: 1em;
+    font-family: "Times New Roman", Times, serif;
+    font-variant: normal;
+    letter-spacing: 1px;
+    background-color: #fff5ef;
+    color: #5e574b;
+}
+
+div#contactForm form div {
+    width: 300px;
+    margin-left: 32px;
+    text-align: right;
+}
+/* --------- contact --------- */

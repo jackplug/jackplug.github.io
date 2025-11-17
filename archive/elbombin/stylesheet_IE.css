@@ -1,0 +1,93 @@
+/*
+   stylesheet section reference:
+   -----------------------------
+   'zero all' - get browsers 'singing from the same hymnsheet'!
+   'basic layout' - general structure
+   'header'
+   'footer'
+   'menu'
+   'search'
+   'Google Ad'
+   'Creative Commons Licence'
+   'main content' - common site-wide style rules within the main content area
+
+   Page Specific Rules
+        'home'
+        'article'
+        'all coaches'
+        'contact'
+        'about'
+        'clubs & countries'
+*/
+
+/* +++++++++ header +++++++++ */
+div#header h3 {
+    margin-top: -7px;
+}
+/* --------- header --------- */
+
+
+
+/* +++++++++ search +++++++++ */
+/* div#sidebar form {
+    margin-top: 0;
+}
+
+div#sidebar fieldset {
+    margin-left: -16px;
+}
+
+div#sidebar label {
+    margin-left: 16px;
+    margin-right: -16px;
+} */
+/* --------- search --------- */
+
+
+
+/* +++++++++ main content +++++++++ */
+div#content div.articleAssociatedInfo {
+    margin-right: 18px;
+}
+
+div#content div.articleAssociatedInfo p {
+    line-height: 1.65em;
+}
+/* --------- main content --------- */
+
+
+
+/* +++++++++ article +++++++++ */
+div#updateForm fieldset p#formInfoExample a:hover span, div#updateForm fieldset p#formInfoExample a:active span {
+    width: 35em;
+    right: 45%;
+}
+/* --------- article --------- */
+
+
+
+/* +++++++++ contact +++++++++ */
+div#contactForm {
+    margin: 10px 0 10px 40px;
+}
+
+div#contactForm form input {
+    margin-left: 40px;
+}
+
+div#contactForm fieldset input, div#contactForm fieldset textarea {
+    margin-left: 0;
+}
+
+div#contactForm form div {
+    margin-left: 43px;
+}
+/* --------- contact --------- */
+
+
+
+/* +++++++++ clubs & countries +++++++++ */
+div#countries, div#clubs {
+    margin-left: 10px;
+}
+/* --------- clubs & countries --------- */

@@ -1,0 +1,9 @@
+/* +++++++++ header +++++++++ */
+div#header h1 {
+    background: url(imgs/headerElBombin.gif) no-repeat 10130px 22px;
+}
+
+div#header h2 {
+    background: url(imgs/subheaderTalesOf.gif) no-repeat 10225px 0;
+}
+/* --------- header --------- */

@@ -1,0 +1,38 @@
+div#header {
+    width: 740px;
+    position: relative;
+    height: 130px;
+}
+
+div#header h2 {
+    position: absolute;
+}
+
+div#header h3 {
+    position: absolute;
+    width: 676px;
+    margin-top: 15px;
+}
+
+div#sidebar {
+    position: absolute;
+    width: 155px;
+}
+
+ul#menu, ul#menu li {
+    display: inline-block; /* mac ie5.2 'float' fix */
+}
+
+div#content p#credits {
+    left: 0;
+    width: 530px;
+}
+
+div#updateForm fieldset p#formInfoExample a:hover span, div#updateForm fieldset p#formInfoExample a:active span {
+    width: 30em;
+    margin-top: -70px;
+}
+
+div#footer {
+    position: absolute;
+}
