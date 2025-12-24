@@ -32,11 +32,13 @@ h1 {
 div {
     display: grid;
     place-items: center;
-    outline: 1px solid black;
-    outline-offset: -1px;
     height: 100%;
-    width: 60%;
-    margin-inline-start: 40%;
+    width: 50%;
+    margin-inline-start: 50%;
+}
+
+p {
+    place-self: start center;
 }
 
 p a {
@@ -45,7 +47,9 @@ p a {
     width: min(30vw, 300px);
     text-decoration: none;
     border-radius: min(15vw, 150px);
-    overflow: hidden
+    overflow: hidden;
+    outline: 2px solid #fff;
+    outline-offset: 6px;
 }
 
 
@@ -55,3 +59,13 @@ svg {
     width: 100%;
 }
 
+.sr-only {
+    border: 0 !important;
+	clip-path: inset(50%) !important;
+	height: 1px !important;
+	margin: -1px !important;
+	overflow: hidden !important;
+	padding: 0 !important;
+	width: 1px !important;
+	white-space: nowrap !important;
+}
