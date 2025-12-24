@@ -81,3 +81,11 @@ svg {
 .punch {
     cursor: url('assets/punch.png'), auto;
 }
+
+.punch a:link,
+.punch a:visited,
+.punch a:hover,
+.punch a:focus,
+.punch a:active {
+    cursor: url('assets/punch.png'), auto;
+}
