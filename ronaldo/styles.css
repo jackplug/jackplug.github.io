@@ -67,6 +67,7 @@ svg {
 }
 
 .sr-only {
+    display: block;
     border: 0 !important;
 	clip-path: inset(50%) !important;
 	height: 1px !important;
