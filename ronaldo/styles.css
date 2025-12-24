@@ -37,6 +37,13 @@ div {
     margin-inline-start: 50%;
 }
 
+@media (max-width: 767px) {
+    div {
+        width: 100%;
+        margin-inline-start: 0;
+    }
+}
+
 p {
     place-self: start center;
 }
