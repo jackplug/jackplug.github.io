@@ -76,3 +76,7 @@ svg {
 	width: 1px !important;
 	white-space: nowrap !important;
 }
+
+.punch {
+    cursor: url('assets/punch.png'), auto;
+}
