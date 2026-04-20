@@ -44,9 +44,9 @@
 
 		const bodyEl = card.querySelector('.js-fable');
 		if (bodyEl && fable.content !== undefined) {
-			const hasHtml = /<[^>]+>/.test(fable.content);
-			if (hasHtml) bodyEl.innerHTML = fable.content;
-			else bodyEl.textContent = fable.content;
+			// content may contain HTML (we expect simple paragraph markup);
+			// render it as HTML so callers can include <p> or other simple tags.
+			bodyEl.innerHTML = fable.content;
 		}
 
 		const backEl = card.querySelector('.js-fable-comment');
