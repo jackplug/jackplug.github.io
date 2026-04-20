@@ -61,6 +61,7 @@ body {
     padding: 1rem;
     justify-content: center;
     position: relative;
+    scrollbar-gutter: stable both-edges;
 }
 
 body::before {
@@ -94,7 +95,6 @@ h1 {
 }
 
 .fable__card-container {
-    margin-block-end: clamp(2rem, 4vh, 4rem);
     width: min(650px, 80%);
     perspective: 1000px; /* Creates the 3D space */
     border: 2px solid #D4AF37; /* Lighter Gold Border */
@@ -295,4 +295,56 @@ h1 {
 
 .fable__card-container:has(.fables-active:where(.last-fable)) ~ .fable__controls .fable__controls-button--next {
     display: none;
+}
+
+/* menu */
+.fable__menu-container {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    left: 0;
+    max-height: 98vh;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 0fr;
+    align-content: start;
+    overflow: hidden;
+    transition: grid-template-rows 0.5s ease-in-out;
+    background: #f0f0f0;
+    isolation: isolate;
+    z-index: 10;
+    box-shadow: 0 10px 10px -10px rgb(0, 0, 0, 0.5);
+}
+
+.fable__menu-container:has(.fable__menu--active) {
+    grid-template-rows: auto 1fr;
+}
+
+.fable__menu {
+    overflow: auto;
+    scrollbar-gutter: stable both-edges;
+    padding: 0 clamp(20px, 5vw, 40px);
+}
+
+.fable__menu > ul {
+    display: block;
+    margin: 0;
+    column-count: auto;
+    column-width: 300px;
+    column-gap: 15px;
+    line-height: 1.2;
+    padding-block: clamp(20px, 5vw, 40px);
+}
+
+.fable__menu li {
+    break-inside: avoid;
+    margin-block-end: 10px;
+}
+
+.fable__menu a {
+    display: block;
+    background: #fff;
+    padding: 10px;
+    outline: 1px solid var(--body-bg);
+    outline-offset: -1px;
 }

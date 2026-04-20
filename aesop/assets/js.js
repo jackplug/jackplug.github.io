@@ -108,7 +108,6 @@
 
                 // Prepare menu now that we have fables (menu DOM created earlier in init())
                 if (fables.length) {
-                    ensureMenu();
                     populateMenu();
                 }
 
@@ -145,43 +144,13 @@
     }
 
     function ensureMenu() {
-        if (document.getElementById('fableMenu')) return;
-        // Prefer inserting the menu directly after the <h1> when present.
-        const h1 = document.querySelector('h1');
-        let parent = null;
-        let insertBeforeNode = null;
-        if (h1 && h1.parentNode) {
-            parent = h1.parentNode;
-            insertBeforeNode = h1.nextSibling;
-        } else {
-            parent = document.querySelector('.fable__controls') || document.body;
-            insertBeforeNode = parent.firstChild;
-        }
-
-        const container = document.createElement('div');
-        container.className = 'fable__menu-container';
-
-        const toggle = document.createElement('button');
-        toggle.id = 'fableMenuToggle';
-        toggle.type = 'button';
-        toggle.className = 'fable__menu-toggle';
-        toggle.textContent = 'Contents';
+        const toggle = document.getElementById('fableMenuToggle');
         toggle.addEventListener('click', function () {
             const menu = document.getElementById('fableMenu');
-            if (!menu) return;
-            const active = menu.classList.toggle('fable__menu--active');
+            menu.classList.toggle('fable__menu--active');
             // update aria attribute; CSS should show/hide based on the class
-            menu.setAttribute('aria-hidden', String(!active));
+            menu.setAttribute('aria-hidden', menu.classList.contains('fable__menu--active'));
         });
-
-        const nav = document.createElement('nav');
-        nav.id = 'fableMenu';
-        nav.className = 'fable__menu';
-        nav.setAttribute('aria-hidden', 'true');
-
-        container.appendChild(toggle);
-        container.appendChild(nav);
-        parent.insertBefore(container, insertBeforeNode);
     }
 
     function populateMenu() {
@@ -234,9 +203,7 @@
                     if (!fables.length) {
                         const loaded = await fetchFables();
                         if (!loaded || !loaded.length) return;
-                        // build menu now that we have the list
-                        ensureMenu();
-                        populateMenu();
+
                         // show the first fable
                         showFableByIndex(0, { updateHistory: true });
                         return;
@@ -274,7 +241,6 @@
                 (async () => {
                     const loaded = await fetchFables();
                     if (!loaded || !loaded.length) return;
-                    ensureMenu();
                     populateMenu();
                     const idx = Math.max(0, Math.min(n - 1, fables.length - 1));
                     showFableByIndex(idx, { updateHistory: true, replace: true });
