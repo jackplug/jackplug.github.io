@@ -64,6 +64,7 @@ body {
 }
 
 body::before {
+    pointer-events: none;
     content: '';
     position: absolute;
     inset: 0;
@@ -134,7 +135,7 @@ h1 {
   will-change: transform;
 }
 
-.fable__card-inner:has(.fable__flip-card:focus) {
+.fable__card-inner:has(.fable__flip-card-button:focus) {
     transform: rotateY(180deg);
 }
 
@@ -164,7 +165,7 @@ h1 {
     box-sizing: border-box;
 }
 
-.fable__flip-card {
+.fable__flip-card-button {
     all: unset;
     position: absolute;
     inset: 0;
@@ -196,7 +197,6 @@ h1 {
     background: linear-gradient(rgb(255, 255, 255, 0.2), rgb(255, 255, 255, 0.2)),
         url('img/paper-bg.jpg');
     background-position: 0 calc(var(--spacing) * -0.5);
-    /* border-bottom: 18px solid transparent; */
     margin-inline: calc(var(--spacing) * -1);
     margin-block-start: calc(var(--spacing) * -1);
 }
@@ -229,4 +229,57 @@ h1 {
 
 .fable__footer > *:last-child {
     margin: 0;
+}
+
+.fable__controls {
+    display: grid;
+    grid-auto-flow: column;
+    width: min(650px, 80%);
+    margin-inline: auto;
+    pointer-events: none;
+}
+
+@media (min-width: 920px) {
+    .fable__controls {
+        width: 98vw;
+        position: fixed;
+        top: 50vh;
+    }
+}
+
+.fable__controls-button {
+    pointer-events: all;
+}
+
+.fable__controls-button--prev {
+    justify-self: start;
+}
+
+.fable__controls-button--next {
+    justify-self: end;
+}
+
+/* show/hide prev/next and 'flip' buttons */
+.fable__flip-card-button {
+    display: none;
+}
+
+.fable__card-container:has(.fables-active) .fable__flip-card-button {
+    display: block;
+}
+
+.fable__controls-button--prev {
+    display: none;
+}
+
+.fable__card-container:has(.fables-active:where(:not(.first-fable))) ~ .fable__controls .fable__controls-button--prev {
+    display: block;
+}
+
+.fable__card-container:has(.fables-active:where(:not(.last-fable))) ~ .fable__controls .fable__controls-button--next {
+    display: block;
+}
+
+.fable__card-container:has(.fables-active:where(.last-fable)) ~ .fable__controls .fable__controls-button--next {
+    display: none;
 }

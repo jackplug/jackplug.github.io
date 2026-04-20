@@ -6,7 +6,7 @@
     let currentIndex = 0;
     let loadingPromise = null;
 
-    function updateElementsForFable(fable) {
+    function updateElementsForFable(fable, index) {
         const card = document.getElementById('fableCard');
         if (!card) {
             console.warn('#fableCard not found in DOM');
@@ -45,9 +45,23 @@
 
         const bodyEl = card.querySelector('.js-fable');
         if (bodyEl && fable.content !== undefined) {
+            let bodyElClasses = ['fables-active'];
+
             // content may contain HTML (we expect simple paragraph markup);
             // render it as HTML so callers can include <p> or other simple tags.
             bodyEl.innerHTML = fable.content;
+
+
+            if (index === 0) {
+                bodyElClasses.push('first-fable');
+            }
+
+            if (index === fables.length - 1) {
+                bodyElClasses.push('last-fable');
+            }
+
+            bodyEl.classList.remove('first-fable', 'last-fable');
+            bodyEl.classList.add(...bodyElClasses);
         }
 
         const backEl = card.querySelector('.js-fable-comment');
@@ -107,11 +121,11 @@
                     const loaded = await fetchFables();
                     if (!loaded || !loaded.length) return;
                     currentIndex = 0;
-                    updateElementsForFable(fables[currentIndex]);
+                    updateElementsForFable(fables[currentIndex], currentIndex);
                     return;
                 }
                 currentIndex = (currentIndex + 1) % fables.length;
-                updateElementsForFable(fables[currentIndex]);
+                updateElementsForFable(fables[currentIndex], currentIndex);
             });
         }
 
@@ -119,7 +133,7 @@
             prevBtn.addEventListener('click', function () {
                 if (!fables.length) return;
                 currentIndex = (currentIndex - 1 + fables.length) % fables.length;
-                updateElementsForFable(fables[currentIndex]);
+                updateElementsForFable(fables[currentIndex], currentIndex);
             });
         }
     }
