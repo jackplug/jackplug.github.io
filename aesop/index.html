@@ -12,19 +12,19 @@
     <link rel="stylesheet" href="assets/css.css">
 </head>
 <body>
-    <h1>Aesop's Fables</h1>
+    <h1>æsop's Fables</h1>
 
     <div class="fable__card-container">
         <div class="fable__card">
             <article id="fableCard" class="fable__card-inner">
                 <section class="fable__card-front">
-                    <h2 class="js-fable-title">Fable Name</h2>
+                    <h2 class="js-fable-title"></h2>
                     <figure>
-                        <img class="js-fable-image" src="https://loremflickr.com/320/240?random=1" height="240" width="320" alt="" />
-                        <figcaption class="js-fable-caption">A random image from loremflickr</figcaption>
+                        <img class="js-fable-image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Aesops_Fables-Rackham-011.jpg/960px-Aesops_Fables-Rackham-011.jpg" height="960" width="1351" alt="æsop's Fables book cover from 1912" />
+                        <figcaption class="js-fable-caption"></figcaption>
                     </figure>
                     <div class="fable__card-content js-fable">
-                        FABLE
+                        <p>HERE, we have a collection of æsop's Fables presented as cards. If you were to click on a card, you would see my interpretation of the Fable - take it or leave it!</p>
                     </div>
                 </section>
                 <section class="fable__card-back js-fable-comment">
@@ -39,9 +39,12 @@
         </div>
     </div>
     <div class="fable__controls">
-        <button id="prevFable" class="js-fable-prev">Previous Fable</button>
-        <button id="nextFable" class="js-fable-next">Next Fable</button>
+        <button id="prevFable" class="js-fable-prev" type="button">Previous Fable</button>
+        <button id="nextFable" class="js-fable-next" type="button">Next Fable</button>
     </div>
+    <footer class="fable__footer">
+        <p>æsop's Fables are scraped from <a href="https://en.wikisource.org/wiki/%C3%86sop%27s_Fables_(V._S._Vernon-Jones)">Wikisource</a> on 19.04.2026</p>
+    </footer>
     <script src="assets/js.js"></script>
 </body>
 </html>

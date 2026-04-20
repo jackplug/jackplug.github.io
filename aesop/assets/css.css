@@ -1,5 +1,7 @@
 :root {
-    --body-bg: #e0e0e0;
+    --body-bg: #F5F1E3;
+    --default-color: #3E3E3E; /* Espresso Ink for better readability */
+    --spacing: clamp(20px, 4vw, 60px);
 }
 
 @font-face {
@@ -51,19 +53,77 @@ body {
     flex-direction: column;
     min-height: 100vh;
     background-color: var(--body-bg);
-    font-family: Arial, sans-serif;
     margin:0;
+    color: var(--default-color);
+    font-family: 'Cormorant Garamond', 'Cormorant-fallback', serif;
+    font-size: 18px;
+    line-height: 1.6;
+    padding: 1rem;
+    justify-content: center;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        /* Coffee/Water Stain */
+        radial-gradient(circle at 80% 20%, rgb(139, 69, 19, 0.1) 0%, transparent 20%),
+        /* Ink Smudge near the bottom */
+        radial-gradient(circle at 30% 90%, rgb(0, 0, 0, 0.05) 0%, transparent 15%),
+        /* General yellowing around the edges */
+        radial-gradient(circle, transparent 60%, rgb(101, 67, 33, 0.1) 100%);
+}
+
+h1 {
+    margin-block-end: clamp(2rem, 4vh, 4rem);
+    font-family: 'Cinzel Decorative', 'Cinzel-Decorative-fallback', serif;
+    font-size: 4rem;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    color: #2C2C2C;
+    text-align: center;
+    border-bottom: 2px solid #B8860B; /* Burnished Gold underline */
+    padding-bottom: 10px;
+    letter-spacing: 2px;
+    flex: 1 1 auto;
+    align-content: end;
+    min-height: 1px;
 }
 
 .fable__card-container {
-    background-color: transparent;
-    width: min(600px, 80%); /* Width of the card */
+    margin-block-end: clamp(2rem, 4vh, 4rem);
+    width: min(650px, 80%);
     perspective: 1000px; /* Creates the 3D space */
+    border: 2px solid #D4AF37; /* Lighter Gold Border */
+    box-shadow: inset 0 0 50px rgb(0, 0, 0, 0.1), /* Subtle Paper Depth */
+        0 0 40px -20px rgb(0, 0, 0, 0.7);
+    background-image: linear-gradient(rgb(255, 255, 255, 0.2), rgb(255, 255, 255, 0.2)),
+        url('img/paper-bg.jpg');
+    background-blend-mode: overlay; /* Softens the texture for readability */
+    position: relative;
+    text-shadow: 0.5px 0.5px 1px rgb(0,0,0,0.1);
+    opacity: 0.95;
+}
+
+.fable__card-container::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; /* Allows users to still click text underneath */
+    background:
+        /* Coffee/Water Stain */
+        radial-gradient(circle at 80% 20%, rgb(139, 69, 19, 0.1) 0%, transparent 20%),
+        /* Ink Smudge near the bottom */
+        radial-gradient(circle at 30% 90%, rgb(0, 0, 0, 0.05) 0%, transparent 15%),
+        /* General yellowing around the edges */
+        radial-gradient(circle, transparent 60%, rgb(101, 67, 33, 0.1) 100%);
 }
 
 .fable__card {
     position: relative;
-    border-radius: 10px;
+    container-type: inline-size;
 }
 
 .fable__card-inner {
@@ -90,11 +150,10 @@ body {
     overflow: hidden;
     grid-column: 1;
     grid-row: 1;
+    padding: var(--spacing);
 }
 
 .fable__card-front {
-    background-color: #007bff;
-    color: white;
 }
 
 .fable__card-back {
@@ -110,4 +169,64 @@ body {
     position: absolute;
     inset: 0;
     cursor: pointer;
+}
+
+.fable__card-content {
+    text-align: left;
+    width: 100%;
+}
+
+.fable__card-content > *:first-child {
+    font-style: italic;
+}
+
+.fable__card-content > *:last-child {
+    margin-block-end: 0;
+}
+
+.fable__card-front h2 {}
+
+.fable__card-front figure {
+    margin-block-end: 20px;
+}
+
+.fable__card-front h2:empty + figure {
+    height: 40cqi;
+    overflow: clip;
+    background: linear-gradient(rgb(255, 255, 255, 0.2), rgb(255, 255, 255, 0.2)),
+        url('img/paper-bg.jpg');
+    background-position: 0 calc(var(--spacing) * -0.5);
+    /* border-bottom: 18px solid transparent; */
+    margin-inline: calc(var(--spacing) * -1);
+    margin-block-start: calc(var(--spacing) * -1);
+}
+
+.fable__card-front h2:empty + figure img {
+    mix-blend-mode: multiply;
+    filter: contrast(1);
+}
+
+.fable__card-content > :first-child::first-letter {
+    font-family: 'Cinzel Decorative', 'Cinzel-Decorative-fallback', serif;
+    font-style: normal;
+    float: left;
+    font-size: 4.2rem;
+    font-size: 3lh;
+    line-height: 1;
+    padding-right: 0.1em;
+    color: #B8860B;
+}
+
+.fable__footer {
+    display: grid;
+    align-content: end;
+    padding-block-start: 20px;
+    font-family: 'Cinzel Decorative', 'Cinzel-Decorative-fallback', serif;
+    font-size: 0.8rem;
+    flex: 1 1 auto;
+    min-height: 1px;
+}
+
+.fable__footer > *:last-child {
+    margin: 0;
 }
