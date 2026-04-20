@@ -17,12 +17,14 @@
         if (titleEl && fable.title !== undefined) titleEl.textContent = fable.title;
 
         const imgEl = card.querySelector('.js-fable-image');
+        const imgCaption = card.querySelector('.js-fable-caption');
         if (imgEl) {
             // If the fable image is explicitly null, clear any existing image/alt and hide the element
             if (fable.image === null) {
                 if (imgEl.tagName === 'IMG') {
                     imgEl.removeAttribute('src');
                     imgEl.alt = '';
+                    imgCaption.textContent = '';
                 } else {
                     imgEl.style.backgroundImage = '';
                 }
@@ -31,8 +33,13 @@
                 // Set image and ensure the element is visible
                 if (imgEl.tagName === 'IMG') {
                     imgEl.src = fable.image;
-                    if (fable.imageAlt !== undefined) imgEl.alt = fable.imageAlt || '';
-                    else if (fable.title) imgEl.alt = fable.title;
+                    if (fable.imageAlt !== undefined) {
+                        imgEl.alt = fable.imageAlt || '';
+                        imgCaption.textContent = fable.imageAlt || '';
+                    } else if (fable.title) {
+                        imgEl.alt = fable.title;
+                        imgCaption.textContent = fable.title;
+                    }
                 } else {
                     imgEl.style.backgroundImage = `url("${fable.image}")`;
                 }
