@@ -14,7 +14,7 @@ body {
 
 .fable__card-container {
     background-color: transparent;
-    width: 300px; /* Width of the card */
+    width: min(600px, 80%); /* Width of the card */
     perspective: 1000px; /* Creates the 3D space */
 }
 
