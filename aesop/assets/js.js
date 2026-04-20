@@ -106,6 +106,12 @@
                     return [];
                 }
 
+                // Prepare menu now that we have fables (menu DOM created earlier in init())
+                if (fables.length) {
+                    ensureMenu();
+                    populateMenu();
+                }
+
                 return fables;
             } catch (err) {
                 console.error('Error loading fables:', err);
@@ -117,30 +123,134 @@
         return loadingPromise;
     }
 
+
+    // Show a specific fable by zero-based index. Ensures fables are loaded.
+    async function showFableByIndex(index, opts) {
+        opts = opts || {};
+        const updateHistory = opts.updateHistory !== false; // default true
+        const replaceState = !!opts.replace;
+        const list = await fetchFables();
+        if (!list || !list.length) return;
+        index = Math.max(0, Math.min(index, fables.length - 1));
+        currentIndex = index;
+        updateElementsForFable(fables[currentIndex], currentIndex);
+        // update URL/history (use 1-based f param for readability)
+        if (updateHistory) {
+            const url = new URL(window.location.href);
+            url.hash = 'f=' + String(currentIndex + 1);
+            const state = { fIndex: currentIndex };
+            if (replaceState) history.replaceState(state, '', url.toString());
+            else history.pushState(state, '', url.toString());
+        }
+    }
+
+    function ensureMenu() {
+        if (document.getElementById('fableMenu')) return;
+        // Prefer inserting the menu directly after the <h1> when present.
+        const h1 = document.querySelector('h1');
+        let parent = null;
+        let insertBeforeNode = null;
+        if (h1 && h1.parentNode) {
+            parent = h1.parentNode;
+            insertBeforeNode = h1.nextSibling;
+        } else {
+            parent = document.querySelector('.fable__controls') || document.body;
+            insertBeforeNode = parent.firstChild;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'fable__menu-container';
+
+        const toggle = document.createElement('button');
+        toggle.id = 'fableMenuToggle';
+        toggle.type = 'button';
+        toggle.className = 'fable__menu-toggle';
+        toggle.textContent = 'Contents';
+        toggle.addEventListener('click', function () {
+            const menu = document.getElementById('fableMenu');
+            if (!menu) return;
+            const active = menu.classList.toggle('fable__menu--active');
+            // update aria attribute; CSS should show/hide based on the class
+            menu.setAttribute('aria-hidden', String(!active));
+        });
+
+        const nav = document.createElement('nav');
+        nav.id = 'fableMenu';
+        nav.className = 'fable__menu';
+        nav.setAttribute('aria-hidden', 'true');
+
+        container.appendChild(toggle);
+        container.appendChild(nav);
+        parent.insertBefore(container, insertBeforeNode);
+    }
+
+    function populateMenu() {
+        const nav = document.getElementById('fableMenu');
+        if (!nav) return;
+        nav.innerHTML = '';
+        const ul = document.createElement('ul');
+        fables.forEach(function (fb, i) {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = '#f=' + (i + 1);
+            a.textContent = fb.title || ('Fable ' + (i + 1));
+            a.addEventListener('click', function (e) {
+                e.preventDefault();
+                showFableByIndex(i, { updateHistory: true });
+                // remove active class after selection; CSS should hide it
+                nav.classList.remove('fable__menu--active');
+                nav.setAttribute('aria-hidden', 'true');
+            });
+            li.appendChild(a);
+            ul.appendChild(li);
+        });
+        nav.appendChild(ul);
+    }
+
+    // Handle back/forward navigation and manual hash changes
+    function handleNavigationEvent(e) {
+        let idx = null;
+        if (e && e.state && typeof e.state.fIndex === 'number') idx = e.state.fIndex;
+        // parse hash like #f=12
+        const h = (window.location.hash || '').replace(/^#/, '');
+        const m = h.match(/^f=(\d+)$/);
+        if (m) {
+            const n = parseInt(m[1], 10);
+            if (!isNaN(n)) idx = n - 1;
+        }
+        if (idx !== null) {
+            showFableByIndex(idx, { updateHistory: false });
+        }
+    }
+    window.addEventListener('popstate', handleNavigationEvent);
+    window.addEventListener('hashchange', handleNavigationEvent);
+
     function setupControls() {
         const nextBtn = document.querySelector('.js-fable-next') || document.getElementById('nextFable');
         const prevBtn = document.querySelector('.js-fable-prev') || document.getElementById('prevFable');
 
         if (nextBtn) {
-            nextBtn.addEventListener('click', async function () {
-                if (!fables.length) {
-                    // first click: fetch and show the first fable
-                    const loaded = await fetchFables();
-                    if (!loaded || !loaded.length) return;
-                    currentIndex = 0;
-                    updateElementsForFable(fables[currentIndex], currentIndex);
-                    return;
-                }
-                currentIndex = (currentIndex + 1) % fables.length;
-                updateElementsForFable(fables[currentIndex], currentIndex);
+                nextBtn.addEventListener('click', async function () {
+                    if (!fables.length) {
+                        const loaded = await fetchFables();
+                        if (!loaded || !loaded.length) return;
+                        // build menu now that we have the list
+                        ensureMenu();
+                        populateMenu();
+                        // show the first fable
+                        showFableByIndex(0, { updateHistory: true });
+                        return;
+                    }
+                    const nextIndex = (currentIndex + 1) % fables.length;
+                    showFableByIndex(nextIndex, { updateHistory: true });
             });
         }
 
         if (prevBtn) {
-            prevBtn.addEventListener('click', function () {
-                if (!fables.length) return;
-                currentIndex = (currentIndex - 1 + fables.length) % fables.length;
-                updateElementsForFable(fables[currentIndex], currentIndex);
+                prevBtn.addEventListener('click', function () {
+                    if (!fables.length) return;
+                    const prevIndex = (currentIndex - 1 + fables.length) % fables.length;
+                    showFableByIndex(prevIndex, { updateHistory: true });
             });
         }
     }
@@ -149,6 +259,28 @@
         // Do not fetch fables on page load; show default content.
         // Fables will be fetched when the user clicks 'Next'.
         setupControls();
+        // Ensure the menu toggle/nav DOM exists immediately so it's available on first paint.
+        ensureMenu();
+
+        // Prefetch fables so the menu can be populated immediately (does not render a fable).
+        fetchFables();
+
+        // If the URL contains a bookmarked fable (#f=N), load that fable now.
+        const hash = (window.location.hash || '').replace(/^#/, '');
+        const m = hash.match(/^f=(\d+)$/);
+        if (m) {
+            const n = parseInt(m[1], 10);
+            if (!isNaN(n)) {
+                (async () => {
+                    const loaded = await fetchFables();
+                    if (!loaded || !loaded.length) return;
+                    ensureMenu();
+                    populateMenu();
+                    const idx = Math.max(0, Math.min(n - 1, fables.length - 1));
+                    showFableByIndex(idx, { updateHistory: true, replace: true });
+                })();
+            }
+        }
     }
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
