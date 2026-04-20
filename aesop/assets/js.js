@@ -4,6 +4,7 @@
 
 	let fables = [];
 	let currentIndex = 0;
+	let loadingPromise = null;
 
 	function updateElementsForFable(fable) {
 		const card = document.getElementById('fableCard');
@@ -53,40 +54,46 @@
 		if (backEl && fable.comment !== undefined) backEl.innerHTML = fable.comment;
 	}
 
-	async function loadFables() {
+	async function fetchFables() {
+		if (loadingPromise) return loadingPromise;
 		const url = 'assets/fables.json';
-		try {
-			const res = await fetch(url, { cache: 'no-store' });
-			if (!res.ok) {
-				console.warn('Failed to fetch', url, res.status);
-				return;
-			}
-
-			let data;
+		loadingPromise = (async () => {
 			try {
-				data = await res.json();
+				const res = await fetch(url, { cache: 'no-store' });
+				if (!res.ok) {
+					console.warn('Failed to fetch', url, res.status);
+					return [];
+				}
+
+				let data;
+				try {
+					data = await res.json();
+				} catch (err) {
+					console.warn('fables.json is empty or invalid JSON');
+					return [];
+				}
+
+				// Normalize to an array of fables
+				if (Array.isArray(data) && data.length) fables = data;
+				else if (data && typeof data === 'object') {
+					if (Array.isArray(data.fables) && data.fables.length) fables = data.fables;
+					else fables = [data];
+				} else fables = [];
+
+				if (!fables.length) {
+					console.warn('No fables found in', url);
+					return [];
+				}
+
+				return fables;
 			} catch (err) {
-				console.warn('fables.json is empty or invalid JSON');
-				return;
+				console.error('Error loading fables:', err);
+				return [];
+			} finally {
+				loadingPromise = null;
 			}
-
-			// Normalize to an array of fables
-			if (Array.isArray(data) && data.length) fables = data;
-			else if (data && typeof data === 'object') {
-				if (Array.isArray(data.fables) && data.fables.length) fables = data.fables;
-				else fables = [data];
-			} else fables = [];
-
-			if (!fables.length) {
-				console.warn('No fables found in', url);
-				return;
-			}
-
-			currentIndex = 0;
-			updateElementsForFable(fables[currentIndex]);
-		} catch (err) {
-			console.error('Error loading fables:', err);
-		}
+		})();
+		return loadingPromise;
 	}
 
 	function setupControls() {
@@ -94,8 +101,15 @@
 		const prevBtn = document.querySelector('.js-fable-prev') || document.getElementById('prevFable');
 
 		if (nextBtn) {
-			nextBtn.addEventListener('click', function () {
-				if (!fables.length) return;
+			nextBtn.addEventListener('click', async function () {
+				if (!fables.length) {
+					// first click: fetch and show the first fable
+					const loaded = await fetchFables();
+					if (!loaded || !loaded.length) return;
+					currentIndex = 0;
+					updateElementsForFable(fables[currentIndex]);
+					return;
+				}
 				currentIndex = (currentIndex + 1) % fables.length;
 				updateElementsForFable(fables[currentIndex]);
 			});
@@ -111,7 +125,8 @@
 	}
 
 	function init() {
-		loadFables();
+		// Do not fetch fables on page load; show default content.
+		// Fables will be fetched when the user clicks 'Next'.
 		setupControls();
 	}
 

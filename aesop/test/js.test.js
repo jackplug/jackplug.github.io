@@ -32,7 +32,9 @@ test('hides image and clears src when fable.image is null', async () => {
   });
 
   require('../assets/js.js');
-  // allow async init/loadFables to complete
+  // click Next to trigger fetch and rendering of the first fable
+  const next = document.getElementById('nextFable');
+  next.click();
   await new Promise((r) => setTimeout(r, 20));
 
   const img = document.querySelector('.js-fable-image');
@@ -53,6 +55,8 @@ test('shows image and sets src/alt when image URL present', async () => {
   });
 
   require('../assets/js.js');
+  const next = document.getElementById('nextFable');
+  next.click();
   await new Promise((r) => setTimeout(r, 20));
 
   const img = document.querySelector('.js-fable-image');
