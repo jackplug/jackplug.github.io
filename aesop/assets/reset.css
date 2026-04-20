@@ -82,3 +82,13 @@ strong {
 ::selection {
     background: rgba(0, 0, 0, 0.12);
 }
+
+.sr-only {
+    clip-path: inset(50%);
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+}

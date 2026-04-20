@@ -31,7 +31,7 @@ body {
   will-change: transform;
 }
 
-.fable__card-container:hover .fable__card-inner {
+.fable__card-inner:has(.fable__flip-card:focus) {
     transform: rotateY(180deg);
 }
 
@@ -60,4 +60,11 @@ body {
     transform: rotateY(180deg);
     padding: 20px;
     box-sizing: border-box;
+}
+
+.fable__flip-card {
+    all: unset;
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
 }
