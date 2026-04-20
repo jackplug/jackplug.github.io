@@ -1,6 +1,49 @@
 :root {
     --body-bg: #e0e0e0;
 }
+
+@font-face {
+    font-family: 'Cinzel Decorative';
+    src: url('fonts/cinzel-decorative-700.woff2') format('woff2');
+    font-weight: 700;
+    font-display: swap;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Cinzel-Decorative-fallback';
+    src: local('Georgia'), local('Times New Roman');
+    size-adjust: 92%;
+    ascent-override: 95%;
+    descent-override: 25%;
+    line-gap-override: 0%;
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url('fonts/cormorant-garamond-regular.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url('fonts/cormorant-garamond-italic.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+    font-style: italic;
+}
+
+/* Fallback for Cormorant (using Times New Roman as base) */
+@font-face {
+  font-family: 'Cormorant-fallback';
+  src: local('Times New Roman');
+  size-adjust: 108%; /* Cormorant is naturally small; we scale the fallback up */
+  ascent-override: 92%;
+  line-gap-override: 0%;
+}
+
 body {
     display: flex;
     justify-content: center;
