@@ -189,6 +189,20 @@ h1 {
 
 .fable__card-front figure {
     margin-block-end: 20px;
+    overflow: clip;
+    background: linear-gradient(rgb(255, 255, 255, 0.2), rgb(255, 255, 255, 0.2)),
+        url('img/paper-bg.jpg');
+    background-position: calc(var(--spacing) * -0.5) calc(var(--spacing) * -0.5);
+    margin-block-start: calc(var(--spacing) * 0.5);
+}
+
+.fable__card-front figure:has(img:where([style*='none'])) {
+    display: none;
+}
+
+.fable__card-front figure img {
+    mix-blend-mode: multiply;
+    filter: contrast(1);
 }
 
 .fable__card figcaption {
@@ -200,17 +214,9 @@ h1 {
 
 .fable__card-front h2:empty + figure {
     height: 40cqi;
-    overflow: clip;
-    background: linear-gradient(rgb(255, 255, 255, 0.2), rgb(255, 255, 255, 0.2)),
-        url('img/paper-bg.jpg');
     background-position: 0 calc(var(--spacing) * -0.5);
     margin-inline: calc(var(--spacing) * -1);
     margin-block-start: calc(var(--spacing) * -1);
-}
-
-.fable__card-front h2:empty + figure img {
-    mix-blend-mode: multiply;
-    filter: contrast(1);
 }
 
 .fable__card-content > :first-child::first-letter {
