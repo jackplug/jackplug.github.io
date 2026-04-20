@@ -1,0 +1,63 @@
+:root {
+    --body-bg: #e0e0e0;
+}
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--body-bg);
+    font-family: Arial, sans-serif;
+    margin:0;
+}
+
+.fable__card-container {
+    background-color: transparent;
+    width: 300px; /* Width of the card */
+    perspective: 1000px; /* Creates the 3D space */
+}
+
+.fable__card {
+    position: relative;
+    border-radius: 10px;
+}
+
+.fable__card-inner {
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+  display: grid;
+  will-change: transform;
+}
+
+.fable__card-container:hover .fable__card-inner {
+    transform: rotateY(180deg);
+}
+
+.fable__card-front,
+.fable__card-back {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.fable__card-front {
+    background-color: #007bff;
+    color: white;
+}
+
+.fable__card-back {
+    background-color: #28a745;
+    color: white;
+    transform: rotateY(180deg);
+    padding: 20px;
+    box-sizing: border-box;
+}
