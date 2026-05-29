@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>World Cup 2026 Game Monitor (Live API + Local Storage)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #status {
+      margin: 10px 0;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>World Cup 2026 Game Monitor (Live API + Local Storage)</h1>
+  <p>Track your 7 teams with live match data and local storage fallback.</p>
+
+  <div>
+    <h2>Your Selected Teams</h2>
+    <ul id="teamList">
+      <!-- Teams will be listed here -->
+    </ul>
+    <button onclick="editTeams()">Edit Teams</button>
+  </div>
+
+  <div id="editTeamsPanel" style="display: none;">
+    <h3>Edit Teams</h3>
+    <div id="teamInputs"></div>
+    <button onclick="saveTeams()">Save Teams</button>
+    <button onclick="cancelEdit()">Cancel</button>
+  </div>
+
+  <h2>League Table</h2>
+  <div id="status">Loading match data...</div>
+  <table id="leagueTable">
+    <thead>
+      <tr>
+        <th>Team</th>
+        <th>Played</th>
+        <th>Wins</th>
+        <th>Draws</th>
+        <th>Losses</th>
+        <th>Goals For</th>
+        <th>Goals Against</th>
+        <th>Points</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+      <!-- Teams and results will be added here by JavaScript -->
+    </tbody>
+  </table>
+
+  <h2>Best Team in Your Group</h2>
+  <p id="bestTeam"></p>
+
+  <button onclick="fetchAndUpdateResults()">Fetch Latest Results</button>
+  <button onclick="clearLocalData()">Clear Local Data</button>
+
+  <script>
+    // Your 7 teams (default)
+    let teams = [
+      "Arsenal",
+      "Barcelona",
+      "Bayern Munich",
+      "Chelsea",
+      "Liverpool",
+      "Manchester City",
+      "Real Madrid"
+    ];
+
+    // Initialize team data
+    let teamData = teams.map(team => ({
+      name: team,
+      played: 0,
+      wins: 0,
+      draws: 0,
+      losses: 0,
+      goalsFor: 0,
+      goalsAgainst: 0,
+      points: 0
+    }));
+
+    // Load teams from localStorage if available
+    function loadTeamsFromLocalStorage() {
+      const savedTeams = localStorage.getItem('wc2026Teams');
+      if (savedTeams) {
+        teams = JSON.parse(savedTeams);
+        teamData = teams.map(team => ({
+          name: team,
+          played: 0,
+          wins: 0,
+          draws: 0,
+          losses: 0,
+          goalsFor: 0,
+          goalsAgainst: 0,
+          points: 0
+        }));
+      }
+    }
+
+    // Save teams to localStorage
+    function saveTeamsToLocalStorage() {
+      localStorage.setItem('wc2026Teams', JSON.stringify(teams));
+    }
+
+    // Display the list of teams
+    function displayTeamList() {
+      const teamList = document.getElementById('teamList');
+      teamList.innerHTML = '';
+      teams.forEach(team => {
+        const li = document.createElement('li');
+        li.textContent = team;
+        teamList.appendChild(li);
+      });
+    }
+
+    // Display the edit teams panel
+    function editTeams() {
+      const panel = document.getElementById('editTeamsPanel');
+      const teamInputs = document.getElementById('teamInputs');
+      teamInputs.innerHTML = '';
+
+      teams.forEach((team, index) => {
+        const div = document.createElement('div');
+        div.innerHTML = `
+          <input type="text" id="team${index}" value="${team}" style="margin: 5px;">
+          <button onclick="removeTeam(${index})">Remove</button>
+        `;
+        teamInputs.appendChild(div);
+      });
+
+      // Add an empty input for adding a new team
+      const addDiv = document.createElement('div');
+      addDiv.innerHTML = `
+        <input type="text" id="newTeam" placeholder="New team name">
+        <button onclick="addTeam()">Add Team</button>
+      `;
+      teamInputs.appendChild(addDiv);
+
+      panel.style.display = 'block';
+    }
+
+    // Add a new team
+    function addTeam() {
+      const newTeamInput = document.getElementById('newTeam');
+      const newTeam = newTeamInput.value.trim();
+      if (newTeam && !teams.includes(newTeam)) {
+        teams.push(newTeam);
+        newTeamInput.value = '';
+        displayTeamList();
+      }
+    }
+
+    // Remove a team
+    function removeTeam(index) {
+      teams.splice(index, 1);
+      displayTeamList();
+    }
+
+    // Save teams and update teamData
+    function saveTeams() {
+      teams = [];
+      for (let i = 0; i < 7; i++) {
+        const teamInput = document.getElementById(`team${i}`);
+        if (teamInput && teamInput.value.trim()) {
+          teams.push(teamInput.value.trim());
+        }
+      }
+      saveTeamsToLocalStorage();
+      teamData = teams.map(team => ({
+        name: team,
+        played: 0,
+        wins: 0,
+        draws: 0,
+        losses: 0,
+        goalsFor: 0,
+        goalsAgainst: 0,
+        points: 0
+      }));
+      document.getElementById('editTeamsPanel').style.display = 'none';
+      displayTeamList();
+      updateTable();
+    }
+
+    // Cancel editing teams
+    function cancelEdit() {
+      document.getElementById('editTeamsPanel').style.display = 'none';
+    }
+
+    // Fetch match results from Football-Data.org API
+    async function fetchMatchResultsFromAPI() {
+      try {
+        // Football-Data.org API endpoint (Premier League as an example)
+        const apiUrl = 'https://api.football-data.org/v4/matches';
+        const headers = {
+          'X-Auth-Token': 'c101ce7193e14d33a00b497f8b55c2cf' // API key (free tier available)
+        };
+
+        const response = await fetch(apiUrl, { headers });
+        if (!response.ok) {
+          throw new Error(`API request failed: ${response.status}`);
+        }
+        const data = await response.json();
+
+        // Filter matches to only include your teams
+        const filteredMatches = data.matches.filter(match =>
+          teams.includes(match.homeTeam.shortName) ||
+          teams.includes(match.awayTeam.shortName)
+        );
+
+        return filteredMatches.map(match => ({
+          homeTeam: match.homeTeam.shortName,
+          awayTeam: match.awayTeam.shortName,
+          homeScore: match.score.fullTime.home,
+          awayScore: match.score.fullTime.away,
+          defenderGoal: false // Not available in this API; set to false for now
+        }));
+      } catch (error) {
+        console.error("Error fetching from API:", error);
+        return null;
+      }
+    }
+
+    // Fetch mock match results (fallback)
+    function fetchMockMatchResults() {
+      const mockMatches = [
+        { homeTeam: "Arsenal", awayTeam: "Barcelona", homeScore: 3, awayScore: 2, defenderGoal: false },
+        { homeTeam: "Bayern Munich", awayTeam: "Chelsea", homeScore: 1, awayScore: 1, defenderGoal: true },
+        { homeTeam: "Liverpool", awayTeam: "Manchester City", homeScore: 0, awayScore: 0, defenderGoal: false },
+        { homeTeam: "Real Madrid", awayTeam: "Arsenal", homeScore: 2, awayScore: 3, defenderGoal: false },
+        { homeTeam: "Barcelona", awayTeam: "Bayern Munich", homeScore: 1, awayScore: 2, defenderGoal: false },
+        { homeTeam: "Chelsea", awayTeam: "Liverpool", homeScore: 2, awayScore: 2, defenderGoal: true },
+        { homeTeam: "Manchester City", awayTeam: "Real Madrid", homeScore: 1, awayScore: 0, defenderGoal: false },
+      ];
+      return mockMatches;
+    }
+
+    // Fetch and update results (with fallback)
+    async function fetchAndUpdateResults() {
+      document.getElementById('status').textContent = "Fetching match data...";
+
+      // Try to fetch from API first
+      let matches = await fetchMatchResultsFromAPI();
+
+      // If API fails or returns no data, use mock data
+      if (!matches || matches.length === 0) {
+        document.getElementById('status').textContent = "Using mock data (API unavailable or rate-limited).";
+        matches = fetchMockMatchResults();
+      } else {
+        document.getElementById('status').textContent = `Fetched ${matches.length} matches from API.`;
+      }
+
+      processMatchResults(matches);
+      updateTable();
+    }
+
+    // Process match results and update team stats
+    function processMatchResults(matches) {
+      // Reset stats before reprocessing
+      teamData = teams.map(team => ({
+        name: team,
+        played: 0,
+        wins: 0,
+        draws: 0,
+        losses: 0,
+        goalsFor: 0,
+        goalsAgainst: 0,
+        points: 0
+      }));
+
+      // Process each match
+      matches.forEach(match => {
+        const homeTeam = teamData.find(t => t.name === match.homeTeam);
+        const awayTeam = teamData.find(t => t.name === match.awayTeam);
+
+        if (!homeTeam || !awayTeam) return; // Skip if team not in your list
+
+        homeTeam.played++;
+        awayTeam.played++;
+
+        homeTeam.goalsFor += match.homeScore;
+        homeTeam.goalsAgainst += match.awayScore;
+        awayTeam.goalsFor += match.awayScore;
+        awayTeam.goalsAgainst += match.homeScore;
+
+        // Determine result
+        if (match.homeScore > match.awayScore) {
+          homeTeam.wins++;
+          awayTeam.losses++;
+          homeTeam.points += 5;
+        } else if (match.homeScore < match.awayScore) {
+          awayTeam.wins++;
+          homeTeam.losses++;
+          awayTeam.points += 5;
+        } else {
+          homeTeam.draws++;
+          awayTeam.draws++;
+          homeTeam.points += 2;
+          awayTeam.points += 2;
+        }
+
+        // Add goal points
+        homeTeam.points += match.homeScore * 2;
+        awayTeam.points += match.awayScore * 2;
+
+        // Add defender goal bonus (if applicable)
+        if (match.defenderGoal) {
+          homeTeam.points += 3;
+        }
+      });
+    }
+
+    // Update the league table
+    function updateTable() {
+      const tableBody = document.getElementById('tableBody');
+      tableBody.innerHTML = '';
+
+      teamData.sort((a, b) => b.points - a.points).forEach(team => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${team.name}</td>
+          <td>${team.played}</td>
+          <td>${team.wins}</td>
+          <td>${team.draws}</td>
+          <td>${team.losses}</td>
+          <td>${team.goalsFor}</td>
+          <td>${team.goalsAgainst}</td>
+          <td>${team.points}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+
+      // Display the best team
+      const bestTeam = teamData.reduce((prev, current) =>
+        (prev.points > current.points) ? prev : current
+      );
+      document.getElementById('bestTeam').textContent =
+        `The best team in your group is: **${bestTeam.name}** with ${bestTeam.points} points!`;
+    }
+
+    // Clear local data
+    function clearLocalData() {
+      localStorage.removeItem('wc2026Teams');
+      teams = [
+        "Arsenal",
+        "Barcelona",
+        "Bayern Munich",
+        "Chelsea",
+        "Liverpool",
+        "Manchester City",
+        "Real Madrid"
+      ];
+      teamData = teams.map(team => ({
+        name: team,
+        played: 0,
+        wins: 0,
+        draws: 0,
+        losses: 0,
+        goalsFor: 0,
+        goalsAgainst: 0,
+        points: 0
+      }));
+      displayTeamList();
+      updateTable();
+      document.getElementById('status').textContent = "Local data cleared. Using default teams.";
+    }
+
+    // Initialize the app
+    loadTeamsFromLocalStorage();
+    displayTeamList();
+    fetchAndUpdateResults();
+  </script>
+</body>
+</html>
