@@ -218,38 +218,41 @@
     }
 
     // Fetch match results from Football-Data.org API
-    async function fetchMatchResultsFromAPI() {
-      try {
-        // Football-Data.org API endpoint (Premier League as an example)
-        const apiUrl = 'https://api.football-data.org/v4/matches';
-        const headers = {
-          'X-Auth-Token': 'c101ce7193e14d33a00b497f8b55c2cf' // API key (free tier available)
-        };
+  async function fetchMatchResultsFromAPI() {
+    try {
+      // Football-Data.org API endpoint (Premier League as an example)
+      const apiUrl = 'https://api.football-data.org/v4/matches';
+      const headers = {
+        'X-Auth-Token': 'YOUR_API_KEY' // Replace with your API key
+      };
 
-        const response = await fetch(apiUrl, { headers });
-        if (!response.ok) {
-          throw new Error(`API request failed: ${response.status}`);
-        }
-        const data = await response.json();
+      // Use a CORS proxy to bypass CORS restrictions
+      const proxyUrl = 'https://cors-anywhere.herokuapp.com/'; // Free public proxy
+      const response = await fetch(proxyUrl + apiUrl, { headers });
 
-        // Filter matches to only include your teams
-        const filteredMatches = data.matches.filter(match =>
-          teams.includes(match.homeTeam.shortName) ||
-          teams.includes(match.awayTeam.shortName)
-        );
-
-        return filteredMatches.map(match => ({
-          homeTeam: match.homeTeam.shortName,
-          awayTeam: match.awayTeam.shortName,
-          homeScore: match.score.fullTime.home,
-          awayScore: match.score.fullTime.away,
-          defenderGoal: false // Not available in this API; set to false for now
-        }));
-      } catch (error) {
-        console.error("Error fetching from API:", error);
-        return null;
+      if (!response.ok) {
+        throw new Error(`API request failed: ${response.status}`);
       }
+      const data = await response.json();
+
+      // Filter matches to only include your teams
+      const filteredMatches = data.matches.filter(match =>
+        teams.includes(match.homeTeam.shortName) ||
+        teams.includes(match.awayTeam.shortName)
+      );
+
+      return filteredMatches.map(match => ({
+        homeTeam: match.homeTeam.shortName,
+        awayTeam: match.awayTeam.shortName,
+        homeScore: match.score.fullTime.home,
+        awayScore: match.score.fullTime.away,
+        defenderGoal: false // Not available in this API; set to false for now
+      }));
+    } catch (error) {
+      console.error("Error fetching from API:", error);
+      return null;
     }
+  }
 
     // Fetch mock match results (fallback)
     function fetchMockMatchResults() {
