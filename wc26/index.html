@@ -227,8 +227,10 @@
       };
 
       // Use a CORS proxy to bypass CORS restrictions
-      const proxyUrl = 'https://api.allorigins.win/get?url='; // Free public proxy
-      const response = await fetch(proxyUrl + apiUrl, { headers });
+      const proxyUrl = 'https://corsproxy.io/?';
+      const response = await fetch(proxyUrl + encodeURIComponent(apiUrl), {
+        headers: headers
+      });
 
       if (!response.ok) {
         throw new Error(`API request failed: ${response.status}`);
