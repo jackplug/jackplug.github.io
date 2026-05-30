@@ -227,7 +227,7 @@
       };
 
       // Use a CORS proxy to bypass CORS restrictions
-      const proxyUrl = 'https://cors-anywhere.herokuapp.com/'; // Free public proxy
+      const proxyUrl = 'https://api.allorigins.win/get?url='; // Free public proxy
       const response = await fetch(proxyUrl + apiUrl, { headers });
 
       if (!response.ok) {
