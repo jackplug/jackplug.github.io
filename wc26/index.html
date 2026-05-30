@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Cup 2026 Game Monitor (Live API + Local Storage)</title>
+  <title>World Cup 2026 Game Monitor (Player-Based)</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -42,21 +42,21 @@
   </style>
 </head>
 <body>
-  <h1>World Cup 2026 Game Monitor (Live API + Local Storage)</h1>
-  <p>Track your 7 teams with live match data and local storage fallback.</p>
+  <h1>World Cup 2026 Game Monitor (Player-Based)</h1>
+  <p>Track your teams and players with custom scoring rules.</p>
 
   <div>
-    <h2>Your Selected Teams</h2>
+    <h2>Your Selected Teams and Players</h2>
     <ul id="teamList">
-      <!-- Teams will be listed here -->
+      <!-- Teams and players will be listed here -->
     </ul>
-    <button onclick="editTeams()">Edit Teams</button>
+    <button onclick="editTeams()">Edit Teams & Players</button>
   </div>
 
   <div id="editTeamsPanel" style="display: none;">
-    <h3>Edit Teams</h3>
+    <h3>Edit Teams and Players</h3>
     <div id="teamInputs"></div>
-    <button onclick="saveTeams()">Save Teams</button>
+    <button onclick="saveTeams()">Save Teams & Players</button>
     <button onclick="cancelEdit()">Cancel</button>
   </div>
 
@@ -65,14 +65,9 @@
   <table id="leagueTable">
     <thead>
       <tr>
-        <th>Team</th>
-        <th>Played</th>
-        <th>Wins</th>
-        <th>Draws</th>
-        <th>Losses</th>
-        <th>Goals For</th>
-        <th>Goals Against</th>
+        <th>Team (Player)</th>
         <th>Points</th>
+        <th>Results</th>
       </tr>
     </thead>
     <tbody id="tableBody">
@@ -80,71 +75,75 @@
     </tbody>
   </table>
 
-  <h2>Best Team in Your Group</h2>
-  <p id="bestTeam"></p>
+  <h2>Best Player in Your Group</h2>
+  <p id="bestPlayer"></p>
 
   <button onclick="fetchAndUpdateResults()">Fetch Latest Results</button>
   <button onclick="clearLocalData()">Clear Local Data</button>
 
   <script>
-    // Your 7 teams (default)
+    // Your 7 teams and their players (default)
     let teams = [
-      "Arsenal",
-      "Barcelona",
-      "Bayern Munich",
-      "Chelsea",
-      "Liverpool",
-      "Manchester City",
-      "Real Madrid"
+      { name: "Arsenal", player: "John" },
+      { name: "Barcelona", player: "Maria" },
+      { name: "Bayern Munich", player: "Hans" },
+      { name: "Chelsea", player: "Lucy" },
+      { name: "Liverpool", player: "Tom" },
+      { name: "Manchester City", player: "Aisha" },
+      { name: "Real Madrid", player: "Carlos" }
     ];
 
     // Initialize team data
     let teamData = teams.map(team => ({
-      name: team,
+      name: team.name,
+      player: team.player,
       played: 0,
       wins: 0,
       draws: 0,
       losses: 0,
       goalsFor: 0,
       goalsAgainst: 0,
-      points: 0
+      points: 0,
+      results: [] // Store results as strings (e.g., "W")
     }));
 
-    // Load teams from localStorage if available
+    // Load teams and players from localStorage if available
     function loadTeamsFromLocalStorage() {
       const savedTeams = localStorage.getItem('wc2026Teams');
       if (savedTeams) {
         teams = JSON.parse(savedTeams);
         teamData = teams.map(team => ({
-          name: team,
+          name: team.name,
+          player: team.player,
           played: 0,
           wins: 0,
           draws: 0,
           losses: 0,
           goalsFor: 0,
           goalsAgainst: 0,
-          points: 0
+          points: 0,
+          results: []
         }));
       }
     }
 
-    // Save teams to localStorage
+    // Save teams and players to localStorage
     function saveTeamsToLocalStorage() {
       localStorage.setItem('wc2026Teams', JSON.stringify(teams));
     }
 
-    // Display the list of teams
+    // Display the list of teams and players
     function displayTeamList() {
       const teamList = document.getElementById('teamList');
       teamList.innerHTML = '';
       teams.forEach(team => {
         const li = document.createElement('li');
-        li.textContent = team;
+        li.textContent = `${team.name} (${team.player})`;
         teamList.appendChild(li);
       });
     }
 
-    // Display the edit teams panel
+    // Display the edit teams and players panel
     function editTeams() {
       const panel = document.getElementById('editTeamsPanel');
       const teamInputs = document.getElementById('teamInputs');
@@ -153,7 +152,8 @@
       teams.forEach((team, index) => {
         const div = document.createElement('div');
         div.innerHTML = `
-          <input type="text" id="team${index}" value="${team}" style="margin: 5px;">
+          <input type="text" id="team${index}" value="${team.name}" placeholder="Team Name" style="margin: 5px;">
+          <input type="text" id="player${index}" value="${team.player}" placeholder="Player Name" style="margin: 5px;">
           <button onclick="removeTeam(${index})">Remove</button>
         `;
         teamInputs.appendChild(div);
@@ -163,6 +163,7 @@
       const addDiv = document.createElement('div');
       addDiv.innerHTML = `
         <input type="text" id="newTeam" placeholder="New team name">
+        <input type="text" id="newPlayer" placeholder="Player name">
         <button onclick="addTeam()">Add Team</button>
       `;
       teamInputs.appendChild(addDiv);
@@ -170,91 +171,99 @@
       panel.style.display = 'block';
     }
 
-    // Add a new team
+    // Add a new team and player
     function addTeam() {
       const newTeamInput = document.getElementById('newTeam');
+      const newPlayerInput = document.getElementById('newPlayer');
       const newTeam = newTeamInput.value.trim();
-      if (newTeam && !teams.includes(newTeam)) {
-        teams.push(newTeam);
+      const newPlayer = newPlayerInput.value.trim();
+      if (newTeam && newPlayer) {
+        teams.push({ name: newTeam, player: newPlayer });
         newTeamInput.value = '';
+        newPlayerInput.value = '';
         displayTeamList();
       }
     }
 
-    // Remove a team
+    // Remove a team and player
     function removeTeam(index) {
       teams.splice(index, 1);
       displayTeamList();
     }
 
-    // Save teams and update teamData
+    // Save teams and players and update teamData
     function saveTeams() {
       teams = [];
       for (let i = 0; i < 7; i++) {
         const teamInput = document.getElementById(`team${i}`);
-        if (teamInput && teamInput.value.trim()) {
-          teams.push(teamInput.value.trim());
+        const playerInput = document.getElementById(`player${i}`);
+        if (teamInput && teamInput.value.trim() && playerInput && playerInput.value.trim()) {
+          teams.push({
+            name: teamInput.value.trim(),
+            player: playerInput.value.trim()
+          });
         }
       }
       saveTeamsToLocalStorage();
       teamData = teams.map(team => ({
-        name: team,
+        name: team.name,
+        player: team.player,
         played: 0,
         wins: 0,
         draws: 0,
         losses: 0,
         goalsFor: 0,
         goalsAgainst: 0,
-        points: 0
+        points: 0,
+        results: []
       }));
       document.getElementById('editTeamsPanel').style.display = 'none';
       displayTeamList();
       updateTable();
     }
 
-    // Cancel editing teams
+    // Cancel editing teams and players
     function cancelEdit() {
       document.getElementById('editTeamsPanel').style.display = 'none';
     }
 
-    // Fetch match results from Football-Data.org API
-  async function fetchMatchResultsFromAPI() {
-    try {
-      // Football-Data.org API endpoint (Premier League as an example)
-      const apiUrl = 'https://api.football-data.org/v4/matches';
-      const headers = {
-        'X-Auth-Token': 'c101ce7193e14d33a00b497f8b55c2cf' // Replace with your API key
-      };
+    // Fetch match results from Football-Data.org API using a CORS proxy
+    async function fetchMatchResultsFromAPI() {
+      try {
+        const apiUrl = 'https://api.football-data.org/v4/matches';
+        const headers = {
+          'X-Auth-Token': 'c101ce7193e14d33a00b497f8b55c2cf' // Replace with your API key
+        };
 
-      // Use a CORS proxy to bypass CORS restrictions
-      const proxyUrl = 'https://corsproxy.io/?';
-      const response = await fetch(proxyUrl + encodeURIComponent(apiUrl), {
-        headers: headers
-      });
+        // Use corsproxy.io (no need for encodeURIComponent)
+        const proxyUrl = 'https://corsproxy.io/?';
+        const response = await fetch(proxyUrl + apiUrl, {
+          headers: headers
+        });
 
-      if (!response.ok) {
-        throw new Error(`API request failed: ${response.status}`);
+        if (!response.ok) {
+          throw new Error(`API request failed: ${response.status}`);
+        }
+        const data = await response.json();
+
+        // Filter matches to only include your teams
+        const filteredMatches = data.matches.filter(match =>
+          teams.some(t => t.name === match.homeTeam.shortName) ||
+          teams.some(t => t.name === match.awayTeam.shortName)
+        );
+
+        return filteredMatches.map(match => ({
+          homeTeam: match.homeTeam.shortName,
+          awayTeam: match.awayTeam.shortName,
+          homeScore: match.score.fullTime.home || 0,
+          awayScore: match.score.fullTime.away || 0,
+          defenderGoal: false // Not available in this API; set to false for now
+        }));
+      } catch (error) {
+        console.error("Error fetching from API:", error);
+        return null;
       }
-      const data = await response.json();
-
-      // Filter matches to only include your teams
-      const filteredMatches = data.matches.filter(match =>
-        teams.includes(match.homeTeam.shortName) ||
-        teams.includes(match.awayTeam.shortName)
-      );
-
-      return filteredMatches.map(match => ({
-        homeTeam: match.homeTeam.shortName,
-        awayTeam: match.awayTeam.shortName,
-        homeScore: match.score.fullTime.home,
-        awayScore: match.score.fullTime.away,
-        defenderGoal: false // Not available in this API; set to false for now
-      }));
-    } catch (error) {
-      console.error("Error fetching from API:", error);
-      return null;
     }
-  }
 
     // Fetch mock match results (fallback)
     function fetchMockMatchResults() {
@@ -293,14 +302,16 @@
     function processMatchResults(matches) {
       // Reset stats before reprocessing
       teamData = teams.map(team => ({
-        name: team,
+        name: team.name,
+        player: team.player,
         played: 0,
         wins: 0,
         draws: 0,
         losses: 0,
         goalsFor: 0,
         goalsAgainst: 0,
-        points: 0
+        points: 0,
+        results: []
       }));
 
       // Process each match
@@ -322,23 +333,29 @@
         if (match.homeScore > match.awayScore) {
           homeTeam.wins++;
           awayTeam.losses++;
-          homeTeam.points += 5;
+          homeTeam.points += 5; // Win points
+          homeTeam.results.push("W");
+          awayTeam.results.push("L");
         } else if (match.homeScore < match.awayScore) {
           awayTeam.wins++;
           homeTeam.losses++;
-          awayTeam.points += 5;
+          awayTeam.points += 5; // Win points
+          homeTeam.results.push("L");
+          awayTeam.results.push("W");
         } else {
           homeTeam.draws++;
           awayTeam.draws++;
-          homeTeam.points += 2;
-          awayTeam.points += 2;
+          homeTeam.points += 2; // Draw points
+          awayTeam.points += 2; // Draw points
+          homeTeam.results.push("D");
+          awayTeam.results.push("D");
         }
 
-        // Add goal points
-        homeTeam.points += match.homeScore * 2;
-        awayTeam.points += match.awayScore * 2;
+        // Add goal points (1 point per goal)
+        homeTeam.points += match.homeScore;
+        awayTeam.points += match.awayScore;
 
-        // Add defender goal bonus (if applicable)
+        // Add defender goal bonus (3 points)
         if (match.defenderGoal) {
           homeTeam.points += 3;
         }
@@ -353,51 +370,48 @@
       teamData.sort((a, b) => b.points - a.points).forEach(team => {
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td>${team.name}</td>
-          <td>${team.played}</td>
-          <td>${team.wins}</td>
-          <td>${team.draws}</td>
-          <td>${team.losses}</td>
-          <td>${team.goalsFor}</td>
-          <td>${team.goalsAgainst}</td>
+          <td>${team.name} (${team.player})</td>
           <td>${team.points}</td>
+          <td>${team.results.join(', ')}</td>
         `;
         tableBody.appendChild(row);
       });
 
-      // Display the best team
-      const bestTeam = teamData.reduce((prev, current) =>
+      // Display the best player
+      const bestPlayer = teamData.reduce((prev, current) =>
         (prev.points > current.points) ? prev : current
       );
-      document.getElementById('bestTeam').textContent =
-        `The best team in your group is: **${bestTeam.name}** with ${bestTeam.points} points!`;
+      document.getElementById('bestPlayer').textContent =
+        `The best player in your group is: **${bestPlayer.player}** (${bestPlayer.name}) with ${bestPlayer.points} points!`;
     }
 
     // Clear local data
     function clearLocalData() {
       localStorage.removeItem('wc2026Teams');
       teams = [
-        "Arsenal",
-        "Barcelona",
-        "Bayern Munich",
-        "Chelsea",
-        "Liverpool",
-        "Manchester City",
-        "Real Madrid"
+        { name: "Arsenal", player: "John" },
+        { name: "Barcelona", player: "Maria" },
+        { name: "Bayern Munich", player: "Hans" },
+        { name: "Chelsea", player: "Lucy" },
+        { name: "Liverpool", player: "Tom" },
+        { name: "Manchester City", player: "Aisha" },
+        { name: "Real Madrid", player: "Carlos" }
       ];
       teamData = teams.map(team => ({
-        name: team,
+        name: team.name,
+        player: team.player,
         played: 0,
         wins: 0,
         draws: 0,
         losses: 0,
         goalsFor: 0,
         goalsAgainst: 0,
-        points: 0
+        points: 0,
+        results: []
       }));
       displayTeamList();
       updateTable();
-      document.getElementById('status').textContent = "Local data cleared. Using default teams.";
+      document.getElementById('status').textContent = "Local data cleared. Using default teams and players.";
     }
 
     // Initialize the app
