@@ -277,7 +277,6 @@
 
     // Process match results and update team stats
     function processMatchResults(matches) {
-      // Reset stats before reprocessing
       teamData = teams.map(team => ({
         name: team.name,
         player: team.player,
@@ -291,51 +290,66 @@
         results: []
       }));
 
-      // Process each match
       matches.forEach(match => {
-        const homeTeam = teamData.find(t => t.name === match.homeTeam);
-        const awayTeam = teamData.find(t => t.name === match.awayTeam);
+        const homeTeam = teamData.find(t => t.name === match.teams.home.name);
+        const awayTeam = teamData.find(t => t.name === match.teams.away.name);
 
-        if (!homeTeam || !awayTeam) return; // Skip if team not in your list
+        if (!homeTeam || !awayTeam) return;
 
         homeTeam.played++;
         awayTeam.played++;
 
-        homeTeam.goalsFor += match.homeScore;
-        homeTeam.goalsAgainst += match.awayScore;
-        awayTeam.goalsFor += match.awayScore;
-        awayTeam.goalsAgainst += match.homeScore;
+        const homeScore = match.goals.home;
+        const awayScore = match.goals.away;
+
+        homeTeam.goalsFor += homeScore;
+        homeTeam.goalsAgainst += awayScore;
+        awayTeam.goalsFor += awayScore;
+        awayTeam.goalsAgainst += homeScore;
+
+        // Extract goal scorers (API-FOOTBALL provides this)
+        const homeGoalScorers = match.goals.home ? match.goals.homeScorers || [] : [];
+        const awayGoalScorers = match.goals.away ? match.goals.awayScorers || [] : [];
+
+        // Check for defender goals in home team
+        homeGoalScorers.forEach(scorer => {
+          if (teamDefenders[homeTeam.name]?.includes(scorer.player.name)) {
+            homeTeam.points += 3; // Bonus points for defender goal
+          }
+        });
+
+        // Check for defender goals in away team
+        awayGoalScorers.forEach(scorer => {
+          if (teamDefenders[awayTeam.name]?.includes(scorer.player.name)) {
+            awayTeam.points += 3; // Bonus points for defender goal
+          }
+        });
 
         // Determine result
-        if (match.homeScore > match.awayScore) {
+        if (homeScore > awayScore) {
           homeTeam.wins++;
           awayTeam.losses++;
-          homeTeam.points += 5; // Win points
+          homeTeam.points += 5;
           homeTeam.results.push("W");
           awayTeam.results.push("L");
-        } else if (match.homeScore < match.awayScore) {
+        } else if (homeScore < awayScore) {
           awayTeam.wins++;
           homeTeam.losses++;
-          awayTeam.points += 5; // Win points
+          awayTeam.points += 5;
           homeTeam.results.push("L");
           awayTeam.results.push("W");
         } else {
           homeTeam.draws++;
           awayTeam.draws++;
-          homeTeam.points += 2; // Draw points
-          awayTeam.points += 2; // Draw points
+          homeTeam.points += 2;
+          awayTeam.points += 2;
           homeTeam.results.push("D");
           awayTeam.results.push("D");
         }
 
-        // Add goal points (1 point per goal)
-        homeTeam.points += match.homeScore;
-        awayTeam.points += match.awayScore;
-
-        // Add defender goal bonus (3 points)
-        if (match.defenderGoal) {
-          homeTeam.points += 3;
-        }
+        // Add goal points
+        homeTeam.points += homeScore;
+        awayTeam.points += awayScore;
       });
     }
 
