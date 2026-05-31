@@ -6,18 +6,23 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Enable CORS for all routes
 app.use(cors());
 
-// Endpoint to fetch match data from Football-Data.org
+// Endpoint to fetch World Cup 2022 matches
 app.get('/api/matches', async (req, res) => {
   try {
-    const apiUrl = 'https://api.football-data.org/v4/matches';
+    const apiUrl = 'https://v3.football.api-sports.io/fixtures';
+    const params = {
+      league: 1, // World Cup league ID
+      season: 2022, // World Cup 2022 season
+      from: '2022-11-20', // Start date of World Cup 2022
+      to: '2022-12-18' // End date of World Cup 2022
+    };
     const headers = {
-      'X-Auth-Token': process.env.FOOTBALL_DATA_API_KEY // Use environment variable for API key
+      'x-apisports-key': process.env.FOOTBALL_API_KEY // Use API-FOOTBALL key
     };
 
-    const response = await axios.get(apiUrl, { headers });
+    const response = await axios.get(apiUrl, { params, headers });
     res.json(response.data);
   } catch (error) {
     console.error("Error fetching from API:", error);
@@ -25,7 +30,6 @@ app.get('/api/matches', async (req, res) => {
   }
 });
 
-// Start the server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
