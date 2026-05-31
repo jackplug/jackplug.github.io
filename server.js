@@ -7,29 +7,32 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
-// Endpoint to fetch matches from API-FOOTBALL
+// Endpoint to fetch World Cup 2022 matches from TheSportsDB
 app.get('/api/matches', async (req, res) => {
   try {
-    const apiUrl = 'https://v3.football.api-sports.io/fixtures';
-    const params = {
-      league: 1, // World Cup league ID (1 is for World Cup)
-      season: 2022, // World Cup 2022 season
-      from: '2022-11-20', // Start date of World Cup 2022
-      to: '2022-12-18' // End date of World Cup 2022
-    };
-    const headers = {
-      'x-apisports-key': process.env.FOOTBALL_DATA_API_KEY // Use your API key
-    };
+    // World Cup 2022 league ID (you can find this on TheSportsDB)
+    const worldCup2022LeagueId = '467'; // World Cup league ID
 
-    const response = await axios.get(apiUrl, { params, headers });
+    const apiUrl = `https://www.thesportsdb.com/api/v1/json/3/eventsleague.php?id=${worldCup2022LeagueId}`;
 
-    if (!response.data || !response.data.response) {
+    const response = await axios.get(apiUrl);
+    if (!response.data || !response.data.events) {
       throw new Error("No match data found in the API response.");
     }
 
-    res.json(response.data.response);
+    // Process the matches to include goal scorer data
+    const matchesWithScorers = response.data.events.map(event => ({
+      homeTeam: event.strHomeTeam,
+      awayTeam: event.strAwayTeam,
+      homeScore: event.intHomeScore || 0,
+      awayScore: event.intAwayScore || 0,
+      homeGoalScorers: event.strHomeGoalDetails ? event.strHomeGoalDetails.split(';').map(goal => goal.trim()) : [],
+      awayGoalScorers: event.strAwayGoalDetails ? event.strAwayGoalDetails.split(';').map(goal => goal.trim()) : []
+    }));
+
+    res.json(matchesWithScorers);
   } catch (error) {
-    console.error("Error fetching from API-FOOTBALL:", error.message);
+    console.error("Error fetching from TheSportsDB:", error.message);
     res.status(500).json({ error: "Failed to fetch match data", details: error.message });
   }
 });
@@ -37,4 +40,3 @@ app.get('/api/matches', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-
