@@ -18,7 +18,7 @@ app.get('/api/matches', async (req, res) => {
       to: '2022-12-18' // End date of World Cup 2022
     };
     const headers = {
-      'x-apisports-key': process.env.FOOTBALL_API_KEY // Use your API key
+      'x-apisports-key': process.env.FOOTBALL_DATA_API_KEY // Use your API key
     };
 
     const response = await axios.get(apiUrl, { params, headers });
