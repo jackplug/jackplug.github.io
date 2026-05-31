@@ -84,25 +84,14 @@
   <script>
     // Your 7 teams and their players (default)
     let teams = [
-      { name: "Spain", player: "Tom" },
-      { name: "Brazil", player: "Philip" },
-      { name: "France", player: "Bill" },
-      { name: "Germany", player: "Šárka" },
-      { name: "Austria", player: "Stuart" },
-      { name: "Japan", player: "David" },
-      { name: "Iran", player: "Granny" }
+      { name: "Arsenal", player: "John" },
+      { name: "Barcelona", player: "Maria" },
+      { name: "Bayern Munich", player: "Hans" },
+      { name: "Chelsea", player: "Lucy" },
+      { name: "Liverpool", player: "Tom" },
+      { name: "Manchester City", player: "Aisha" },
+      { name: "Real Madrid", player: "Carlos" }
     ];
-
-    // Define defenders for each team
-    const teamDefenders = {
-      "Spain": ["Aymeric Laporte", "Rodri", "Pau Torres", "Jesús Navas"],
-      "Brazil": ["Danilo", "Marquinhos", "Éder Militão", "Alex Sandro"],
-      "France": ["Jules Koundé", "Ibrahima Konaté", "William Saliba", "Benjamin Pavard"],
-      "Germany": ["Antonio Rüdiger", "Jonathan Tah", "Matthias Ginter", "Robin Knoche"],
-      "Austria": ["Stefan Lainer", "Maximilian Wöber", "Philipp Mwene", "Gernot Trauner"],
-      "Japan": ["Maya Yoshida", "Shogo Taniguchi", "Takehiro Tomiyasu", "Hiroki Sakai"],
-      "Iran": ["Saeid Ezatolahi", "Milad Mohammadi", "Ramin Rezaeian", "Shoja' Khalilzadeh"]
-    };
 
     // Initialize team data
     let teamData = teams.map(team => ({
@@ -115,7 +104,7 @@
       goalsFor: 0,
       goalsAgainst: 0,
       points: 0,
-      results: []
+      results: [] // Store results as strings (e.g., "W")
     }));
 
     // Load teams and players from localStorage if available
@@ -238,7 +227,7 @@
       document.getElementById('editTeamsPanel').style.display = 'none';
     }
 
-    // Fetch match results from API-FOOTBALL via your Render backend
+    // Fetch match results from Football-Data.org API using a CORS proxy
     async function fetchMatchResultsFromAPI() {
       try {
         const response = await fetch('https://jackplug-github-io-wc26backend.onrender.com/api/matches');
@@ -246,7 +235,7 @@
           throw new Error(`API request failed: ${response.status}`);
         }
         const data = await response.json();
-        return data;
+        return data.matches || [];
       } catch (error) {
         console.error("Error fetching from API:", error);
         return null;
@@ -256,38 +245,13 @@
     // Fetch mock match results (fallback)
     function fetchMockMatchResults() {
       const mockMatches = [
-        {
-          teams: { home: { name: "Spain" }, away: { name: "Brazil" } },
-          goals: { home: 2, away: 1 },
-          goalsScorers: {
-            home: ["Rodri", "Álvaro Morata"],
-            away: ["Vini Jr."]
-          }
-        },
-        {
-          teams: { home: { name: "France" }, away: { name: "Germany" } },
-          goals: { home: 3, away: 3 },
-          goalsScorers: {
-            home: ["Kylian Mbappé", "Ousmane Dembélé", "Antoine Griezmann"],
-            away: ["Florian Wirtz", "Jamal Musiala", "Niclas Füllkrug"]
-          }
-        },
-        {
-          teams: { home: { name: "Austria" }, away: { name: "Japan" } },
-          goals: { home: 0, away: 2 },
-          goalsScorers: {
-            home: [],
-            away: ["Ritsu Doan", "Takefusa Kubo"]
-          }
-        },
-        {
-          teams: { home: { name: "Iran" }, away: { name: "Spain" } },
-          goals: { home: 0, away: 1 },
-          goalsScorers: {
-            home: [],
-            away: ["Lamine Yamal"]
-          }
-        }
+        { homeTeam: "Arsenal", awayTeam: "Barcelona", homeScore: 3, awayScore: 2, defenderGoal: false },
+        { homeTeam: "Bayern Munich", awayTeam: "Chelsea", homeScore: 1, awayScore: 1, defenderGoal: true },
+        { homeTeam: "Liverpool", awayTeam: "Manchester City", homeScore: 0, awayScore: 0, defenderGoal: false },
+        { homeTeam: "Real Madrid", awayTeam: "Arsenal", homeScore: 2, awayScore: 3, defenderGoal: false },
+        { homeTeam: "Barcelona", awayTeam: "Bayern Munich", homeScore: 1, awayScore: 2, defenderGoal: false },
+        { homeTeam: "Chelsea", awayTeam: "Liverpool", homeScore: 2, awayScore: 2, defenderGoal: true },
+        { homeTeam: "Manchester City", awayTeam: "Real Madrid", homeScore: 1, awayScore: 0, defenderGoal: false },
       ];
       return mockMatches;
     }
@@ -313,7 +277,6 @@
 
     // Process match results and update team stats
     function processMatchResults(matches) {
-      // Reset stats before reprocessing
       teamData = teams.map(team => ({
         name: team.name,
         player: team.player,
@@ -327,12 +290,11 @@
         results: []
       }));
 
-      // Process each match
       matches.forEach(match => {
         const homeTeam = teamData.find(t => t.name === match.teams.home.name);
         const awayTeam = teamData.find(t => t.name === match.teams.away.name);
 
-        if (!homeTeam || !awayTeam) return; // Skip if team not in your list
+        if (!homeTeam || !awayTeam) return;
 
         homeTeam.played++;
         awayTeam.played++;
@@ -346,19 +308,19 @@
         awayTeam.goalsAgainst += homeScore;
 
         // Extract goal scorers (API-FOOTBALL provides this)
-        const homeGoalScorers = match.goalsScorers?.home || [];
-        const awayGoalScorers = match.goalsScorers?.away || [];
+        const homeGoalScorers = match.goals.home ? match.goals.homeScorers || [] : [];
+        const awayGoalScorers = match.goals.away ? match.goals.awayScorers || [] : [];
 
         // Check for defender goals in home team
         homeGoalScorers.forEach(scorer => {
-          if (teamDefenders[homeTeam.name]?.includes(scorer)) {
+          if (teamDefenders[homeTeam.name]?.includes(scorer.player.name)) {
             homeTeam.points += 3; // Bonus points for defender goal
           }
         });
 
         // Check for defender goals in away team
         awayGoalScorers.forEach(scorer => {
-          if (teamDefenders[awayTeam.name]?.includes(scorer)) {
+          if (teamDefenders[awayTeam.name]?.includes(scorer.player.name)) {
             awayTeam.points += 3; // Bonus points for defender goal
           }
         });
@@ -367,25 +329,25 @@
         if (homeScore > awayScore) {
           homeTeam.wins++;
           awayTeam.losses++;
-          homeTeam.points += 5; // Win points
+          homeTeam.points += 5;
           homeTeam.results.push("W");
           awayTeam.results.push("L");
         } else if (homeScore < awayScore) {
           awayTeam.wins++;
           homeTeam.losses++;
-          awayTeam.points += 5; // Win points
+          awayTeam.points += 5;
           homeTeam.results.push("L");
           awayTeam.results.push("W");
         } else {
           homeTeam.draws++;
           awayTeam.draws++;
-          homeTeam.points += 2; // Draw points
-          awayTeam.points += 2; // Draw points
+          homeTeam.points += 2;
+          awayTeam.points += 2;
           homeTeam.results.push("D");
           awayTeam.results.push("D");
         }
 
-        // Add goal points (1 point per goal)
+        // Add goal points
         homeTeam.points += homeScore;
         awayTeam.points += awayScore;
       });
@@ -407,26 +369,24 @@
       });
 
       // Display the best player
-      if (teamData.length > 0) {
-        const bestPlayer = teamData.reduce((prev, current) =>
-          (prev.points > current.points) ? prev : current
-        );
-        document.getElementById('bestPlayer').textContent =
-          `The best player in your group is: **${bestPlayer.player}** (${bestPlayer.name}) with ${bestPlayer.points} points!`;
-      }
+      const bestPlayer = teamData.reduce((prev, current) =>
+        (prev.points > current.points) ? prev : current
+      );
+      document.getElementById('bestPlayer').textContent =
+        `The best player in your group is: **${bestPlayer.player}** (${bestPlayer.name}) with ${bestPlayer.points} points!`;
     }
 
     // Clear local data
     function clearLocalData() {
       localStorage.removeItem('wc2026Teams');
       teams = [
-        { name: "Spain", player: "Tom" },
-        { name: "Brazil", player: "Philip" },
-        { name: "France", player: "Bill" },
-        { name: "Germany", player: "Šárka" },
-        { name: "Austria", player: "Stuart" },
-        { name: "Japan", player: "David" },
-        { name: "Iran", player: "Granny" }
+        { name: "Arsenal", player: "John" },
+        { name: "Barcelona", player: "Maria" },
+        { name: "Bayern Munich", player: "Hans" },
+        { name: "Chelsea", player: "Lucy" },
+        { name: "Liverpool", player: "Tom" },
+        { name: "Manchester City", player: "Aisha" },
+        { name: "Real Madrid", player: "Carlos" }
       ];
       teamData = teams.map(team => ({
         name: team.name,
