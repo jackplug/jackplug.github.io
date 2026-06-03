@@ -28,14 +28,18 @@ async function scrapeWorldCupResults() {
           const homeTeam = $(cols).text().trim();
           const awayTeam = $(cols).text().trim();
           const scoreText = $(cols).text().trim();
-          const scores = scoreText.split('–').map(s => parseInt(s.trim()));
 
-          if (scores.length === 2 && !isNaN(scores) && !isNaN(scores)) {
+          // Score is usually in format "X–Y" or "X–Y (pen.)"
+          const scoreMatch = scoreText.match(/(\d+)\s*–\s*(\d+)/);
+          if (scoreMatch) {
+            const homeScore = parseInt(scoreMatch, 10);
+            const awayScore = parseInt(scoreMatch, 10);
+
             results.push({
               homeTeam,
               awayTeam,
-              homeScore: scores,
-              awayScore: scores
+              homeScore,
+              awayScore
             });
           }
         }
