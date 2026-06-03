@@ -16,7 +16,11 @@ async function scrapeWorldCupResults() {
   const url = 'https://en.wikipedia.org/wiki/2022_FIFA_World_Cup';
 
   try {
-    const { data } = await axios.get(url);
+    const { data } = await axios.get(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; WC2026GameMonitor/1.0; +https://jackplug.github.io/wc26/)'
+      }
+    });
     const $ = cheerio.load(data);
     const results = [];
 
