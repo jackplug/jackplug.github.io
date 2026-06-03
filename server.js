@@ -1,5 +1,6 @@
 const express = require('express');
 const axios = require('axios');
+const cheerio = require('cheerio');
 const cors = require('cors');
 
 const app = express();
@@ -7,45 +8,63 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
-const API_KEY = process.env.ZAFRONIX_API_KEY; // Set this in Render environment variables
-const BASE_URL = 'https://api.zafronix.com/fifa/worldcup/v1';
+let cachedResults = null;
+let cacheTimestamp = 0;
+const CACHE_DURATION_MS = 60 * 60 * 1000; // 1 hour cache
 
-let cache = {}; // Cache per year
+async function scrapeWorldCupResults() {
+  const url = 'https://en.wikipedia.org/wiki/2022_FIFA_World_Cup';
 
-const CACHE_DURATION_MS = 2 * 60 * 1000; // 2 minutes
+  try {
+    const { data } = await axios.get(url);
+    const $ = cheerio.load(data);
+    const results = [];
 
-app.get('/api/tournament/:year', async (req, res) => {
-  const year = req.params.year;
+    // Select all match tables under the "Matches" section
+    $('span#Matches').parent().nextAll('table.wikitable').each((i, table) => {
+      $(table).find('tr').each((j, row) => {
+        const cols = $(row).find('td');
+        if (cols.length >= 5) {
+          const homeTeam = $(cols).text().trim();
+          const awayTeam = $(cols).text().trim();
+          const scoreText = $(cols).text().trim();
+          const scores = scoreText.split('–').map(s => parseInt(s.trim()));
+
+          if (scores.length === 2 && !isNaN(scores) && !isNaN(scores)) {
+            results.push({
+              homeTeam,
+              awayTeam,
+              homeScore: scores,
+              awayScore: scores
+            });
+          }
+        }
+      });
+    });
+
+    return results;
+  } catch (error) {
+    console.error('Wikipedia scraping error:', error);
+    return null;
+  }
+}
+
+app.get('/api/wc-results', async (req, res) => {
   const now = Date.now();
 
   // Serve cached data if fresh
-  if (cache[year] && (now - cache[year].timestamp) < CACHE_DURATION_MS) {
-    console.log(`Serving cached data for year ${year}`);
-    return res.json(cache[year].data);
+  if (cachedResults && (now - cacheTimestamp) < CACHE_DURATION_MS) {
+    return res.json(cachedResults);
   }
 
-  // Fetch fresh data
-  try {
-    console.log(`Fetching fresh data for year ${year} from Zafronix`);
-    const response = await axios.get(`${BASE_URL}/tournaments/${year}`, {
-      headers: { 'X-API-Key': API_KEY }
-    });
-
-    cache[year] = {
-      data: response.data,
-      timestamp: now
-    };
-
-    res.json(response.data);
-  } catch (error) {
-    console.error(`Error fetching data from Zafronix for year ${year}:`, error.message);
-
-    if (cache[year]) {
-      console.log(`Serving stale cached data for year ${year} due to error`);
-      return res.json(cache[year].data);
-    }
-
-    res.status(500).json({ error: 'Failed to fetch tournament data' });
+  // Scrape fresh data
+  const results = await scrapeWorldCupResults();
+  if (results) {
+    cachedResults = results;
+    cacheTimestamp = now;
+    return res.json(results);
+  } else {
+    return res.status(500).json({ error: 'Failed to scrape results' });
   }
 });
 
