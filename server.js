@@ -7,36 +7,47 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
-// Endpoint to fetch World Cup 2022 matches from TheSportsDB
+const API_URL = 'https://api.football-data.org/v4/matches';
+const API_TOKEN = process.env.API_KEY; // Set your Football-Data.org API key in Render environment variables
+
+// Cache variables
+let cachedData = null;
+let cacheTimestamp = 0;
+const CACHE_DURATION_MS = 2 * 60 * 1000; // 2 minutes cache
+
 app.get('/api/matches', async (req, res) => {
+  const now = Date.now();
+
+  // Serve cached data if fresh
+  if (cachedData && (now - cacheTimestamp) < CACHE_DURATION_MS) {
+    console.log('Serving cached data');
+    return res.json(cachedData);
+  }
+
+  // Otherwise fetch fresh data
   try {
-    // World Cup 2022 league ID (you can find this on TheSportsDB)
-    const worldCup2022LeagueId = '467'; // World Cup league ID
+    console.log('Fetching fresh data from Football-Data.org');
+    const response = await axios.get(API_URL, {
+      headers: { 'X-Auth-Token': API_TOKEN }
+    });
 
-    const apiUrl = `https://www.thesportsdb.com/api/v1/json/3/eventsleague.php?id=${worldCup2022LeagueId}`;
+    cachedData = response.data;
+    cacheTimestamp = now;
 
-    const response = await axios.get(apiUrl);
-    if (!response.data || !response.data.events) {
-      throw new Error("No match data found in the API response.");
+    res.json(cachedData);
+  } catch (error) {
+    console.error('Error fetching data from Football-Data.org:', error.message);
+
+    // If cache exists, serve stale data as fallback
+    if (cachedData) {
+      console.log('Serving stale cached data due to API error');
+      return res.json(cachedData);
     }
 
-    // Process the matches to include goal scorer data
-    const matchesWithScorers = response.data.events.map(event => ({
-      homeTeam: event.strHomeTeam,
-      awayTeam: event.strAwayTeam,
-      homeScore: event.intHomeScore || 0,
-      awayScore: event.intAwayScore || 0,
-      homeGoalScorers: event.strHomeGoalDetails ? event.strHomeGoalDetails.split(';').map(goal => goal.trim()) : [],
-      awayGoalScorers: event.strAwayGoalDetails ? event.strAwayGoalDetails.split(';').map(goal => goal.trim()) : []
-    }));
-
-    res.json(matchesWithScorers);
-  } catch (error) {
-    console.error("Error fetching from TheSportsDB:", error.message);
-    res.status(500).json({ error: "Failed to fetch match data", details: error.message });
+    res.status(500).json({ error: 'Failed to fetch match data' });
   }
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
