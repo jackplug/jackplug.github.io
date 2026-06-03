@@ -7,49 +7,45 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
-// Change for current WC
-const useTestData = true;
+const API_KEY = process.env.ZAFRONIX_API_KEY; // Set this in Render environment variables
+const BASE_URL = 'https://api.zafronix.com/fifa/worldcup/v1';
 
-const API_URL = useTestData
-  ? 'https://api.football-data.org/v4/matches?competitions=WC&season=2022'
-  : 'https://api.football-data.org/v4/matches?competitions=WC';
-const API_TOKEN = process.env.API_KEY; // Set in Render environment variables
+let cache = {}; // Cache per year
 
-// Cache variables
-let cachedData = null;
-let cacheTimestamp = 0;
-const CACHE_DURATION_MS = 2 * 60 * 1000; // 2 minutes cache
+const CACHE_DURATION_MS = 2 * 60 * 1000; // 2 minutes
 
-app.get('/api/matches', async (req, res) => {
+app.get('/api/tournament/:year', async (req, res) => {
+  const year = req.params.year;
   const now = Date.now();
 
   // Serve cached data if fresh
-  if (cachedData && (now - cacheTimestamp) < CACHE_DURATION_MS) {
-    console.log('Serving cached data');
-    return res.json(cachedData);
+  if (cache[year] && (now - cache[year].timestamp) < CACHE_DURATION_MS) {
+    console.log(`Serving cached data for year ${year}`);
+    return res.json(cache[year].data);
   }
 
-  // Otherwise fetch fresh data
+  // Fetch fresh data
   try {
-    console.log('Fetching fresh data from Football-Data.org');
-    const response = await axios.get(API_URL, {
-      headers: { 'X-Auth-Token': API_TOKEN }
+    console.log(`Fetching fresh data for year ${year} from Zafronix`);
+    const response = await axios.get(`${BASE_URL}/tournaments/${year}`, {
+      headers: { 'X-API-Key': API_KEY }
     });
 
-    cachedData = response.data;
-    cacheTimestamp = now;
+    cache[year] = {
+      data: response.data,
+      timestamp: now
+    };
 
-    res.json(cachedData);
+    res.json(response.data);
   } catch (error) {
-    console.error('Error fetching data from Football-Data.org:', error.message);
+    console.error(`Error fetching data from Zafronix for year ${year}:`, error.message);
 
-    // If cache exists, serve stale data as fallback
-    if (cachedData) {
-      console.log('Serving stale cached data due to API error');
-      return res.json(cachedData);
+    if (cache[year]) {
+      console.log(`Serving stale cached data for year ${year} due to error`);
+      return res.json(cache[year].data);
     }
 
-    res.status(500).json({ error: 'Failed to fetch match data' });
+    res.status(500).json({ error: 'Failed to fetch tournament data' });
   }
 });
 
