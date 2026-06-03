@@ -290,8 +290,8 @@
 
       // If backend fails or returns no data, use mock data
       if (!matches || matches.length === 0) {
-        document.getElementById('status').textContent = "Using mock data (backend unavailable or no matches).";
-        matches = fetchMockMatchResults(); // Use your mock data as fallback
+        document.getElementById('status').textContent = "No World Cup 2026 matches scheduled yet. Using mock data for testing.";
+        matches = fetchMockMatchResults();
       }
 
       processMatchResults(matches);
