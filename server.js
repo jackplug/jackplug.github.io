@@ -12,47 +12,38 @@ let cachedResults = null;
 let cacheTimestamp = 0;
 const CACHE_DURATION_MS = 60 * 60 * 1000; // 1 hour cache
 
-async function scrapeWorldCupResults() {
-  const url = 'https://en.wikipedia.org/wiki/2022_FIFA_World_Cup';
+async function scrapeSoccerwayWorldCup() {
+  const url = 'https://us.soccerway.com/international/world/world-cup/2022-qatar/s17627/';
 
   try {
     const { data } = await axios.get(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; WC2026GameMonitor/1.0; +https://jackplug.github.io/wc26/)'
+        'User-Agent': 'WC2026GameMonitor/1.0 (+https://jackplug.github.io/wc26)'
       }
     });
+
     const $ = cheerio.load(data);
     const results = [];
 
-    // Select all match tables under the "Matches" section
-    $('span#Matches').parent().nextAll('table.wikitable').each((i, table) => {
-      $(table).find('tr').each((j, row) => {
-        const cols = $(row).find('td');
-        if (cols.length >= 5) {
-          const homeTeam = $(cols).text().trim();
-          const awayTeam = $(cols).text().trim();
-          const scoreText = $(cols).text().trim();
+    $('.matches .match').each((i, elem) => {
+      const homeTeam = $(elem).find('.team-home .name').text().trim();
+      const awayTeam = $(elem).find('.team-away .name').text().trim();
+      const scoreText = $(elem).find('.score').text().trim();
+      const scoreMatch = scoreText.match(/(\d+)\s*-\s*(\d+)/);
 
-          // Score is usually in format "X–Y" or "X–Y (pen.)"
-          const scoreMatch = scoreText.match(/(\d+)\s*–\s*(\d+)/);
-          if (scoreMatch) {
-            const homeScore = parseInt(scoreMatch, 10);
-            const awayScore = parseInt(scoreMatch, 10);
-
-            results.push({
-              homeTeam,
-              awayTeam,
-              homeScore,
-              awayScore
-            });
-          }
-        }
-      });
+      if (scoreMatch) {
+        results.push({
+          homeTeam,
+          awayTeam,
+          homeScore: parseInt(scoreMatch, 10),
+          awayScore: parseInt(scoreMatch, 10)
+        });
+      }
     });
 
     return results;
   } catch (error) {
-    console.error('Wikipedia scraping error:', error);
+    console.error('Error scraping Soccerway:', error);
     return null;
   }
 }
@@ -60,19 +51,19 @@ async function scrapeWorldCupResults() {
 app.get('/api/wc-results', async (req, res) => {
   const now = Date.now();
 
-  // Serve cached data if fresh
   if (cachedResults && (now - cacheTimestamp) < CACHE_DURATION_MS) {
+    console.log('Serving cached Soccerway results');
     return res.json(cachedResults);
   }
 
-  // Scrape fresh data
-  const results = await scrapeWorldCupResults();
+  const results = await scrapeSoccerwayWorldCup();
+
   if (results) {
     cachedResults = results;
     cacheTimestamp = now;
-    return res.json(results);
+    res.json(results);
   } else {
-    return res.status(500).json({ error: 'Failed to scrape results' });
+    res.status(500).json({ error: 'Failed to scrape Soccerway results' });
   }
 });
 
