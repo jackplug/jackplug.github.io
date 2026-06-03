@@ -12,26 +12,25 @@ let cachedResults = null;
 let cacheTimestamp = 0;
 const CACHE_DURATION_MS = 60 * 60 * 1000; // 1 hour cache
 
-async function scrapeSoccerwayWorldCup() {
-  const url = 'https://us.soccerway.com/international/world/world-cup/2022-qatar/s17627/';
+async function scrapeWorldCupResults() {
+  const url = 'https://en.wikipedia.org/wiki/2022_FIFA_World_Cup';
 
   try {
     const { data } = await axios.get(url, {
-      headers: {
-        'User-Agent': 'WC2026GameMonitor/1.0 (+https://jackplug.github.io/wc26)'
-      }
+      headers: { 'User-Agent': 'WC2026GameMonitor/1.0 (+https://jackplug.github.io/wc26)' }
     });
 
     const $ = cheerio.load(data);
     const results = [];
 
-    $('.matches .match').each((i, elem) => {
-      const homeTeam = $(elem).find('.team-home .name').text().trim();
-      const awayTeam = $(elem).find('.team-away .name').text().trim();
-      const scoreText = $(elem).find('.score').text().trim();
-      const scoreMatch = scoreText.match(/(\d+)\s*-\s*(\d+)/);
+    $('table.footballbox').each((i, table) => {
+      const homeTeam = $(table).find('.fhome').text().trim();
+      const awayTeam = $(table).find('.faway').text().trim();
 
-      if (scoreMatch) {
+      const fullTimeScore = $(table).find('.fscore').first().text().trim();
+      const scoreMatch = fullTimeScore.match(/(\d+)\s*–\s*(\d+)/);
+
+      if (homeTeam && awayTeam && scoreMatch) {
         results.push({
           homeTeam,
           awayTeam,
@@ -41,9 +40,11 @@ async function scrapeSoccerwayWorldCup() {
       }
     });
 
+    console.log(`Scraped ${results.length} matches from Wikipedia.`);
     return results;
+
   } catch (error) {
-    console.error('Error scraping Soccerway:', error);
+    console.error('Wikipedia scraping error:', error);
     return null;
   }
 }
@@ -52,18 +53,17 @@ app.get('/api/wc-results', async (req, res) => {
   const now = Date.now();
 
   if (cachedResults && (now - cacheTimestamp) < CACHE_DURATION_MS) {
-    console.log('Serving cached Soccerway results');
     return res.json(cachedResults);
   }
 
-  const results = await scrapeSoccerwayWorldCup();
+  const results = await scrapeWorldCupResults();
 
   if (results) {
     cachedResults = results;
     cacheTimestamp = now;
-    res.json(results);
+    return res.json(results);
   } else {
-    res.status(500).json({ error: 'Failed to scrape Soccerway results' });
+    return res.status(500).json({ error: 'Failed to scrape results' });
   }
 });
 
