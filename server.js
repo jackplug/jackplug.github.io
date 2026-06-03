@@ -25,11 +25,11 @@ async function scrapeWorldCupResults() {
 
     console.log($);
 
-    $('table.footballbox').each((i, table) => {
-      const homeTeam = $(table).find('.fhome').text().trim();
-      const awayTeam = $(table).find('.faway').text().trim();
+    $('.footballbox').each((i, element) => {
+      const homeTeam = $(element).find('.fhome').text().trim();
+      const awayTeam = $(element).find('.faway').text().trim();
 
-      const fullTimeScore = $(table).find('.fscore').first().text().trim();
+      const fullTimeScore = $(element).find('.fscore').first().text().trim();
       const scoreMatch = fullTimeScore.match(/(\d+)\s*–\s*(\d+)/);
 
       if (homeTeam && awayTeam && scoreMatch) {
