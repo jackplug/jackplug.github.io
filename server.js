@@ -23,8 +23,6 @@ async function scrapeWorldCupResults() {
     const $ = cheerio.load(data);
     const results = [];
 
-    console.log($);
-
     $('.footballbox').each((i, element) => {
       const homeTeam = $(element).find('.fhome').text().trim();
       const awayTeam = $(element).find('.faway').text().trim();
