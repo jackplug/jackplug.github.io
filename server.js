@@ -7,7 +7,12 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
-const API_URL = 'https://api.football-data.org/v4/matches?competitions=WC'; // Fetch all World Cup matches
+// Change for current WC
+const useTestData = true;
+
+const API_URL = useTestData
+  ? 'https://api.football-data.org/v4/matches?competitions=WC&season=2022'
+  : 'https://api.football-data.org/v4/matches?competitions=WC';
 const API_TOKEN = process.env.API_KEY; // Set in Render environment variables
 
 // Cache variables
