@@ -17,8 +17,10 @@ async function scrapeWorldCupResults() {
 
   try {
     const { data } = await axios.get(url, {
-      headers: { 'User-Agent': 'WC2026GameMonitor/1.0 (+https://jackplug.github.io/wc26)' }
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.6045.9 Safari/537.36' }
     });
+
+    console.log(data);
 
     const $ = cheerio.load(data);
     const results = [];
