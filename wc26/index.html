@@ -93,6 +93,19 @@
       { name: "England", player: "Stuart" }
     ];
 
+    let teamDefenders = {};
+
+    async function loadDefenders() {
+      try {
+        const response = await fetch('defenders-2026.json'); // Adjust path as needed
+        if (!response.ok) throw new Error('Failed to load defenders list');
+        teamDefenders = await response.json();
+      } catch (error) {
+        console.error('Error loading defenders:', error);
+      }
+    }
+
+
     // Initialize team data
     let teamData = teams.map(team => ({
       name: team.name,
@@ -227,35 +240,21 @@
       document.getElementById('editTeamsPanel').style.display = 'none';
     }
 
-    // Add or update the fetchMatchResultsFromAPI function
     async function fetchMatchResultsFromAPI() {
       try {
-        // Replace with your actual backend URL
-        const response = await fetch('https://jackplug-github-io-wc26backend.onrender.com/api/tournament/2022');
-        if (!response.ok) throw new Error(`Failed to fetch: ${response.status}`);
-
+        const response = await fetch('https://jackplug-github-io-wc26backend.onrender.com/api/wc-results'); // Replace with your backend URL
+        if (!response.ok) throw new Error(`Failed to fetch results: ${response.status}`);
         const data = await response.json();
 
-        // Zafronix returns tournament data with a "matches" array
-        const matches = data.matches || [];
-
-        // Filter matches for your teams (adjust team name keys if different)
-        const filteredMatches = matches.filter(match =>
-          teams.some(t => t.name === match.home_team.name) ||
-          teams.some(t => t.name === match.away_team.name)
+        // Filter matches for your teams
+        const filteredMatches = data.filter(match =>
+          teams.some(t => t.name === match.homeTeam) ||
+          teams.some(t => t.name === match.awayTeam)
         );
 
-        // Map to your app's expected format
-        return filteredMatches.map(match => ({
-          homeTeam: match.home_team.name,
-          awayTeam: match.away_team.name,
-          homeScore: match.home_team_score,
-          awayScore: match.away_team_score,
-          defenderGoal: false // Adjust if you parse detailed goal data later
-        }));
+        return filteredMatches;
       } catch (error) {
-        console.error('Error fetching matches:', error);
-        document.getElementById('status').textContent = `Error fetching matches: ${error.message}`;
+        console.error('Error fetching match results:', error);
         return null;
       }
     }
@@ -307,6 +306,11 @@
         results: []
       }));
 
+      function isDefender(teamName, playerName) {
+        const defenders = teamDefenders[teamName];
+        return defenders ? defenders.includes(playerName) : false;
+      }
+
       // Process each match
       matches.forEach(match => {
         const homeTeam = teamData.find(t => t.name === match.homeTeam);
@@ -331,14 +335,14 @@
 
         // Check for defender goals in home team
         homeGoalScorers.forEach(scorer => {
-          if (teamDefenders[homeTeam.name]?.includes(scorer)) {
+          if (isDefender(teamDefenders[homeTeam.name], scorer)) {
             homeTeam.points += 3; // Bonus points for defender goal
           }
         });
 
         // Check for defender goals in away team
         awayGoalScorers.forEach(scorer => {
-          if (teamDefenders[awayTeam.name]?.includes(scorer)) {
+          if (isDefender(teamDefenders[awayTeam.name], scorer)) {
             awayTeam.points += 3; // Bonus points for defender goal
           }
         });
@@ -424,6 +428,7 @@
     }
 
     // Initialize the app
+    loadDefenders();
     loadTeamsFromLocalStorage();
     displayTeamList();
     fetchAndUpdateResults();
