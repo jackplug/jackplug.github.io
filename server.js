@@ -7,8 +7,8 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
-const API_URL = 'https://api.football-data.org/v4/matches';
-const API_TOKEN = process.env.API_KEY; // Set your Football-Data.org API key in Render environment variables
+const API_URL = 'https://api.football-data.org/v4/matches?competitions=WC'; // Fetch all World Cup matches
+const API_TOKEN = process.env.API_KEY; // Set in Render environment variables
 
 // Cache variables
 let cachedData = null;
