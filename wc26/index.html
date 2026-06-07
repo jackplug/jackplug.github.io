@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Cup 2026 Game Monitor (Player-Based)</title>
+  <title>World Cup 2026 Game Monitor</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -39,16 +39,25 @@
       margin: 10px 0;
       font-weight: bold;
     }
+
+    tr.positive {
+      background-color: #d4edda; /* light green */
+      transition: background-color 1s ease;
+    }
+    tr.negative {
+      background-color: #f8d7da; /* light red */
+      transition: background-color 1s ease;
+    }
   </style>
 </head>
 <body>
-  <h1>World Cup 2026 Game Monitor (Player-Based)</h1>
-  <p>Track your teams and players with the following scoring rules:</p>
+  <h1>World Cup 2026 Game Monitor</h1>
+  <p>Track your teams with the following scoring rules:</p>
   <ol>
     <li>if your team wins, you get 5 points;</li>
     <li>if your team draws, you get 2 points;</li>
     <li>for every goal scored by your team, you get 2 points, but...</li>
-    <li>if it's a <strong>defender</strong> on your team that scores, then you get 3 points</li>
+    <li>...if it's scored by a <strong>defender</strong> on your team, you get <strong>3</strong> points!</li>
   </ol>
 
   <div>
@@ -172,9 +181,8 @@
             homeTeam.results.push('L');
           } else {
             homeTeam.draws++;
-            homeTeam.points += 2;
+            homeTeam.points += 2; // Draw points
             homeTeam.results.push('D');
-            // No draw points specified
           }
 
           // Calculate goal points with defender bonus
@@ -208,9 +216,8 @@
             awayTeam.results.push('L');
           } else {
             awayTeam.draws++;
-            awayTeam.points += 2;
+            awayTeam.points += 2; // Draw points
             awayTeam.results.push('D');
-            // No draw points specified
           }
 
           // Calculate goal points with defender bonus
@@ -228,22 +235,55 @@
       });
     }
 
-    // Update the league table in the DOM
+    // Update the league table in the DOM and highlight position changes
     function updateTable() {
       const tbody = document.getElementById('tableBody');
       tbody.innerHTML = '';
 
+      // Sort teams by points descending
       teamData.sort((a, b) => b.points - a.points);
 
-      teamData.forEach(team => {
+      // Load previous positions from localStorage (map team name to position)
+      const prevPositionsRaw = localStorage.getItem('wc2026Positions');
+      const prevPositions = prevPositionsRaw ? JSON.parse(prevPositionsRaw) : {};
+
+      // Build new positions map for saving later
+      const newPositions = {};
+
+      teamData.forEach((team, index) => {
+        newPositions[team.name] = index;
+
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${team.name} (${team.player})</td>
           <td>${team.points}</td>
           <td>${team.results.join(', ')}</td>
         `;
+
+        // Compare with previous position to add class
+        if (prevPositions.hasOwnProperty(team.name)) {
+          const prevPos = prevPositions[team.name];
+          const currPos = index;
+
+          if (currPos < prevPos) {
+            tr.classList.add('positive'); // moved up
+          } else if (currPos > prevPos) {
+            tr.classList.add('negative'); // moved down
+          }
+        }
+
         tbody.appendChild(tr);
+
+        // Remove highlight after 5 seconds
+        if (tr.classList.contains('positive') || tr.classList.contains('negative')) {
+          setTimeout(() => {
+            tr.classList.remove('positive', 'negative');
+          }, 5000);
+        }
       });
+
+      // Save current positions for next update
+      localStorage.setItem('wc2026Positions', JSON.stringify(newPositions));
 
       // Show best player
       if (teamData.length > 0) {
@@ -261,7 +301,7 @@
 
     // Clear local data and reset table
     function clearLocalData() {
-      localStorage.removeItem('wc2026TableState');
+      localStorage.removeItem('wc2026Positions');
       teamData = initializeTeamData();
       updateTable();
       document.getElementById('status').textContent = "Local data cleared. Table reset.";
