@@ -1,0 +1,58 @@
+[
+  {
+    "homeTeam": "Spain",
+    "awayTeam": "Cape Verde",
+    "homeScore": 5,
+    "awayScore": 1,
+    "homeGoalScorers": ["Eric García", "Aymeric Laporte", "Dani Carvajal", "Rodri", "Álvaro Morata"],
+    "awayGoalScorers": ["Vini Jr."]
+  },
+  {
+    "homeTeam": "Brazil",
+    "awayTeam": "Morocco",
+    "homeScore": 2,
+    "awayScore": 0,
+    "homeGoalScorers": ["Vini Jr.", "Thiago Silva"],
+    "awayGoalScorers": []
+  },
+  {
+    "homeTeam": "France",
+    "awayTeam": "Senegal",
+    "homeScore": 2,
+    "awayScore": 0,
+    "homeGoalScorers": ["Kylian Mbappé", "Theo Hernandez"],
+    "awayGoalScorers": []
+  },
+  {
+    "homeTeam": "Germany",
+    "awayTeam": "Curaçao",
+    "homeScore": 4,
+    "awayScore": 0,
+    "homeGoalScorers": ["Antonio Rüdiger", "Niklas Süle", "Lukas Klostermann", "Florian Wirtz"],
+    "awayGoalScorers": []
+  },
+  {
+    "homeTeam": "Austria",
+    "awayTeam": "Jordan",
+    "homeScore": 0,
+    "awayScore": 0,
+    "homeGoalScorers": [],
+    "awayGoalScorers": []
+  },
+  {
+    "homeTeam": "Netherlands",
+    "awayTeam": "Japan",
+    "homeScore": 1,
+    "awayScore": 1,
+    "homeGoalScorers": ["Mr. X"],
+    "awayGoalScorers": ["Maya Yoshida"]
+  },
+  {
+    "homeTeam": "Iran",
+    "awayTeam": "New Zealand",
+    "homeScore": 2,
+    "awayScore": 1,
+    "homeGoalScorers": ["Majid Hosseini", "Morteza Pouraliganji"],
+    "awayGoalScorers": ["Captain Sensible"]
+  }
+]

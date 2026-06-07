@@ -1,6 +1,6 @@
 const express = require('express');
-const axios = require('axios');
-const cheerio = require('cheerio');
+const fs = require('fs');
+const path = require('path');
 const cors = require('cors');
 
 const app = express();
@@ -8,62 +8,15 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
-let cachedResults = null;
-let cacheTimestamp = 0;
-const CACHE_DURATION_MS = 60 * 60 * 1000; // 1 hour cache
-
-async function scrapeWorldCupResults() {
-  const url = 'https://en.wikipedia.org/wiki/2022_FIFA_World_Cup';
-
+// Endpoint to fetch World Cup results from the JSON file
+app.get('/api/wc-results', (req, res) => {
   try {
-    const { data } = await axios.get(url, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.6045.9 Safari/537.36' }
-    });
-
-    const $ = cheerio.load(data);
-    const results = [];
-
-    $('.footballbox').each((i, element) => {
-      const homeTeam = $(element).find('.fhome').text().trim();
-      const awayTeam = $(element).find('.faway').text().trim();
-
-      const fullTimeScore = $(element).find('.fscore').first().text().trim();
-      const scoreMatch = fullTimeScore.match(/(\d+)\s*–\s*(\d+)/);
-
-      if (homeTeam && awayTeam && scoreMatch) {
-        results.push({
-          homeTeam,
-          awayTeam,
-          homeScore: parseInt(scoreMatch, 10),
-          awayScore: parseInt(scoreMatch, 10)
-        });
-      }
-    });
-
-    console.log(`Scraped ${results.length} matches from Wikipedia.`);
-    return results;
-
+    const filePath = path.join(__dirname, 'matches.json');
+    const matches = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    res.json(matches);
   } catch (error) {
-    console.error('Wikipedia scraping error:', error);
-    return null;
-  }
-}
-
-app.get('/api/wc-results', async (req, res) => {
-  const now = Date.now();
-
-  if (cachedResults && (now - cacheTimestamp) < CACHE_DURATION_MS) {
-    return res.json(cachedResults);
-  }
-
-  const results = await scrapeWorldCupResults();
-
-  if (results) {
-    cachedResults = results;
-    cacheTimestamp = now;
-    return res.json(results);
-  } else {
-    return res.status(500).json({ error: 'Failed to scrape results' });
+    console.error('Error reading matches.json:', error);
+    res.status(500).json({ error: 'Failed to fetch results' });
   }
 });
 
