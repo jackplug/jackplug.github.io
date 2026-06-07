@@ -10,6 +10,15 @@
       max-width: 1000px;
       margin: 0 auto;
       padding: 20px;
+      line-height: 1.6;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(500px, 100%), 1fr));
+      gap: 15px 0;
+    }
+    h1,
+    body > div {
+      grid-column: 1 / -1;
+      text-align: center;
     }
     table {
       width: 100%;
@@ -18,11 +27,23 @@
     }
     th, td {
       border: 1px solid #ddd;
-      padding: 8px;
+      border-width: 0 0 1px;
+      padding: clamp(8px, 2vh, 15px) clamp(2px, 2vw, 15px);
       text-align: left;
+    }
+    th + th ~ th,
+    td + td ~ td {
+      text-align: center;
+      width: 1px;
     }
     th {
       background-color: #f2f2f2;
+    }
+    td {
+      background-color: #fff;
+    }
+    td:nth-child(2) {
+      width: 100%;
     }
     button {
       padding: 10px 15px;
@@ -40,53 +61,84 @@
       font-weight: bold;
     }
 
-    tr.positive {
-      background-color: #d4edda; /* light green */
-      transition: background-color 1s ease;
+    .user-team {
+      font-size: 1.2rem;
+      position: relative;
     }
-    tr.negative {
-      background-color: #f8d7da; /* light red */
-      transition: background-color 1s ease;
+
+    .user-team::before {
+      position: absolute;
+      left: -1.2rem;
+      top: 0.005em;
+      font-family: "Proxima Nova", "Helvetica Neue", Monospace, Arial, sans-serif;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .positive .user-team::before {
+      color: #0c0;
+      content: '\2191';
+    }
+    .negative .user-team::before {
+      color: #f00;
+      content: '\2193';
+    }
+
+    .user-name {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+
+    .copyright {
+      grid-column: 1 / -1;
+      text-align: center;
+      text-transform: uppercase;
+      font-size: 0.7rem;
+    }
+
+    .copyright span {
+      font-family: "Proxima Nova", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 1rem;
+      position: relative;
+      top: 1px;
     }
   </style>
 </head>
 <body>
   <h1>World Cup 2026 Game Monitor</h1>
-  <p>Track your teams with the following scoring rules:</p>
-  <ol>
-    <li>if your team wins, you get 5 points;</li>
-    <li>if your team draws, you get 2 points;</li>
-    <li>for every goal scored by your team, you get 2 points, but...</li>
-    <li>...if it's scored by a <strong>defender</strong> on your team, you get <strong>3</strong> points!</li>
-  </ol>
+  <section>
+    <h2>Scores work as follows:</h2>
+    <ol>
+      <li>if your team wins, you get 5 points;</li>
+      <li>if your team draws, you get 2 points;</li>
+      <li>for every goal scored by your team, you get 2 points, but...</li>
+      <li>...if it's scored by a <strong>defender</strong> on your team, you get <strong>3</strong> points!</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>League Table</h2>
+    <div id="status">Loading match data...</div>
+    <table id="leagueTable">
+      <thead>
+        <tr>
+          <th>Team</th>
+          <th>Player</th>
+          <th>Points</th>
+          <th>Results</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- Teams and results will be added here by JavaScript -->
+      </tbody>
+    </table>
+  </section>
 
   <div>
-    <h2>Your Selected Teams and Players</h2>
-    <ul id="teamList">
-      <!-- Teams and players will be listed here -->
-    </ul>
-  </div>
-
-  <h2>League Table</h2>
-  <div id="status">Loading match data...</div>
-  <table id="leagueTable">
-    <thead>
-      <tr>
-        <th>Team (Player)</th>
-        <th>Points</th>
-        <th>Results</th>
-      </tr>
-    </thead>
-    <tbody id="tableBody">
-      <!-- Teams and results will be added here by JavaScript -->
-    </tbody>
-  </table>
-
-  <h2>Best Player in Your Group</h2>
-  <p id="bestPlayer"></p>
-
   <button onclick="fetchAndUpdateResults()">Fetch Latest Results</button>
   <button onclick="clearLocalData()">Clear Local Data</button>
+  </div>
+  <p class="copyright"><span>&copy;</span> Names Are Difficult, plc 2026</p>
 
   <script>
     // Fixed teams (no editing)
@@ -120,17 +172,6 @@
         points: 0,
         results: []
       }));
-    }
-
-    // Display the list of teams and players
-    function displayTeamList() {
-      const teamList = document.getElementById('teamList');
-      teamList.innerHTML = '';
-      teams.forEach(team => {
-        const li = document.createElement('li');
-        li.textContent = `${team.name} (${team.player})`;
-        teamList.appendChild(li);
-      });
     }
 
     // Fetch defenders JSON from server
@@ -255,7 +296,8 @@
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td>${team.name} (${team.player})</td>
+          <td><strong class="user-team">${team.name}</strong></td>
+          <td><span class="user-name">${team.player}</span></td>
           <td>${team.points}</td>
           <td>${team.results.join(', ')}</td>
         `;
@@ -265,6 +307,7 @@
           const prevPos = prevPositions[team.name];
           const currPos = index;
 
+          tr.classList.remove('positive', 'negative');
           if (currPos < prevPos) {
             tr.classList.add('positive'); // moved up
           } else if (currPos > prevPos) {
@@ -273,30 +316,10 @@
         }
 
         tbody.appendChild(tr);
-
-        // Remove highlight after 5 seconds
-        if (tr.classList.contains('positive') || tr.classList.contains('negative')) {
-          setTimeout(() => {
-            tr.classList.remove('positive', 'negative');
-          }, 5000);
-        }
       });
 
       // Save current positions for next update
       localStorage.setItem('wc2026Positions', JSON.stringify(newPositions));
-
-      // Show best player
-      if (teamData.length > 0) {
-        const best = teamData.reduce((max, t) => (t.points > max.points ? t : max), { points: -Infinity });
-        if (best && best.player && best.name && best.points !== undefined) {
-          document.getElementById('bestPlayer').innerHTML =
-            `<strong>The best player in your group is:</strong> **${best.player}** (${best.name}) with ${best.points} points!`;
-        } else {
-          document.getElementById('bestPlayer').textContent = "Best player data is incomplete.";
-        }
-      } else {
-        document.getElementById('bestPlayer').textContent = "No teams available.";
-      }
     }
 
     // Clear local data and reset table
@@ -322,7 +345,6 @@
 
     // Initialize app on page load
     window.onload = async function() {
-      displayTeamList();
       await fetchDefenders();
       const matches = await fetchMatchResults();
       if (matches) {
