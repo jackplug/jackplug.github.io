@@ -10,9 +10,9 @@
   {
     "homeTeam": "Brazil",
     "awayTeam": "Morocco",
-    "homeScore": 2,
+    "homeScore": 4,
     "awayScore": 0,
-    "homeGoalScorers": ["Vini Jr.", "Thiago Silva"],
+    "homeGoalScorers": ["Vini Jr.", "Thiago Silva", "Marquinhos", "Danilo"],
     "awayGoalScorers": []
   },
   {
