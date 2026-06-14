@@ -1,58 +1,66 @@
 [
   {
-    "homeTeam": "Spain",
-    "awayTeam": "Cape Verde",
-    "homeScore": 5,
+    "homeTeam": "Mexico",
+    "awayTeam": "South Africa",
+    "homeScore": 2,
+    "awayScore": 0,
+    "homeGoalScorers": ["Julián Quiñones", "Raúl Jiménez"],
+    "awayGoalScorers": []
+  },
+  {
+    "homeTeam": "South Korea",
+    "awayTeam": "Czech Republic",
+    "homeScore": 2,
     "awayScore": 1,
-    "homeGoalScorers": ["Eric García", "Aymeric Laporte", "Dani Carvajal", "Rodri", "Álvaro Morata"],
-    "awayGoalScorers": ["Vini Jr."]
+    "homeGoalScorers": ["Hwang In-beom", "Oh Hyeon-gyu"],
+    "awayGoalScorers": ["Ladislav Krejčí"]
+  },
+  {
+    "homeTeam": "Canada",
+    "awayTeam": "Bosnia and Herzegovina",
+    "homeScore": 1,
+    "awayScore": 1,
+    "homeGoalScorers": ["Cyle Larin"],
+    "awayGoalScorers": ["Jovo Lukić"]
+  },
+  {
+    "homeTeam": "Qatar",
+    "awayTeam": "Switzerland",
+    "homeScore": 1,
+    "awayScore": 1,
+    "homeGoalScorers": ["Miro Muheim"],
+    "awayGoalScorers": ["Breel Embolo"]
   },
   {
     "homeTeam": "Brazil",
     "awayTeam": "Morocco",
-    "homeScore": 4,
-    "awayScore": 0,
-    "homeGoalScorers": ["Vini Jr.", "Thiago Silva", "Marquinhos", "Danilo"],
-    "awayGoalScorers": []
-  },
-  {
-    "homeTeam": "France",
-    "awayTeam": "Senegal",
-    "homeScore": 2,
-    "awayScore": 0,
-    "homeGoalScorers": ["Kylian Mbappé", "Theo Hernandez"],
-    "awayGoalScorers": []
-  },
-  {
-    "homeTeam": "Germany",
-    "awayTeam": "Curaçao",
-    "homeScore": 4,
-    "awayScore": 0,
-    "homeGoalScorers": ["Antonio Rüdiger", "Niklas Süle", "Lukas Klostermann", "Florian Wirtz"],
-    "awayGoalScorers": []
-  },
-  {
-    "homeTeam": "Austria",
-    "awayTeam": "Jordan",
-    "homeScore": 0,
-    "awayScore": 0,
-    "homeGoalScorers": [],
-    "awayGoalScorers": []
-  },
-  {
-    "homeTeam": "Netherlands",
-    "awayTeam": "Japan",
     "homeScore": 1,
     "awayScore": 1,
-    "homeGoalScorers": ["Mr. X"],
-    "awayGoalScorers": ["Maya Yoshida"]
+    "homeGoalScorers": ["Vinícius Júnior"],
+    "awayGoalScorers": ["Ismael Saibari"]
   },
   {
-    "homeTeam": "Iran",
-    "awayTeam": "New Zealand",
-    "homeScore": 2,
+    "homeTeam": "Haiti",
+    "awayTeam": "Scotland",
+    "homeScore": 0,
     "awayScore": 1,
-    "homeGoalScorers": ["Majid Hosseini", "Morteza Pouraliganji"],
-    "awayGoalScorers": ["Captain Sensible"]
+    "homeGoalScorers": [],
+    "awayGoalScorers": ["John McGinn"]
+  },
+  {
+    "homeTeam": "United States",
+    "awayTeam": "Paraguay",
+    "homeScore": 4,
+    "awayScore": 1,
+    "homeGoalScorers": ["Damián Bobadilla", "Folarin Balogun", "Folarin Balogun", "Giovanni Reyna"],
+    "awayGoalScorers": ["Maurício"]
+  },
+  {
+    "homeTeam": "Australia",
+    "awayTeam": "Turkey",
+    "homeScore": 2,
+    "awayScore": 0,
+    "homeGoalScorers": ["Nestory Irankunda", "Connor Metcalfe"],
+    "awayGoalScorers": []
   }
 ]
