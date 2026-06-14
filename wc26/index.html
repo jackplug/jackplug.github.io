@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Cup 2026 Game Monitor</title>
+  <title>[FIX1] World Cup 2026 Game Monitor</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -199,8 +199,11 @@
     // Process match results and update teamData stats
     function processMatchResults(matches) {
       teamData = initializeTeamData();
+      console.log("Processing matches:", matches); // Debug log
 
       matches.forEach(match => {
+        console.log(`Processing match: ${match.homeTeam} ${match.homeScore}-${match.awayScore} ${match.awayTeam}`); // Debug log
+
         const homeTeam = teamData.find(t => t.name === match.homeTeam);
         const awayTeam = teamData.find(t => t.name === match.awayTeam);
 
@@ -230,6 +233,7 @@
           const homeScorers = match.homeGoalScorers || [];
           let homeGoalPoints = 0;
           homeScorers.forEach(scorer => {
+            console.log(`Home scorer: ${scorer}, is defender?`, teamDefenders[homeTeam.name]?.includes(scorer)); // Debug log
             if (teamDefenders[homeTeam.name]?.includes(scorer)) {
               homeGoalPoints += 3; // Defender goal
             } else {
@@ -237,6 +241,7 @@
             }
           });
           homeTeam.points += homeGoalPoints;
+          console.log(`Home team ${homeTeam.name} points: ${homeTeam.points} (${homeGoalPoints} from goals)`); // Debug log
         }
 
         // Process away team if tracked
@@ -265,6 +270,7 @@
           const awayScorers = match.awayGoalScorers || [];
           let awayGoalPoints = 0;
           awayScorers.forEach(scorer => {
+            console.log(`Away scorer: ${scorer}, is defender?`, teamDefenders[awayTeam.name]?.includes(scorer)); // Debug log
             if (teamDefenders[awayTeam.name]?.includes(scorer)) {
               awayGoalPoints += 3; // Defender goal
             } else {
@@ -272,6 +278,7 @@
             }
           });
           awayTeam.points += awayGoalPoints;
+          console.log(`Away team ${awayTeam.name} points: ${awayTeam.points} (${awayGoalPoints} from goals)`); // Debug log
         }
       });
     }
