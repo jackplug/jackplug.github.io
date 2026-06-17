@@ -1,9 +1,11 @@
 {
-  "Brazil": ["Marquinhos", "Thiago Silva", "Alex Sandro", "Danilo"],
-  "Spain": ["Jordi Alba", "Eric García", "Aymeric Laporte", "Dani Carvajal"],
-  "France": ["Raphaël Varane", "Lucas Hernandez", "Jules Koundé", "Theo Hernandez"],
-  "Germany": ["Antonio Rüdiger", "Niklas Süle", "Lukas Klostermann", "Robin Gosens"],
-  "Iran": ["Majid Hosseini", "Morteza Pouraliganji", "Milad Mohammadi", "Ramin Rezaeian"],
-  "Japan": ["Takehiro Tomiyasu", "Maya Yoshida", "Yuto Nagatomo", "Hiroki Sakai"],
-  "Austria": ["David Alaba", "Martin Hinteregger", "Stefan Lainer", "Philipp Lienhart"]
+  "Brazil": ["Gabriel Magalhães", "Marquinhos", "Alex Sandro", "Danilo Luiz", "Gleison Bremer", "Léo Pereira", "Douglas Santos", "Roger Ibañez"],
+  "Spain": ["Marc Pubill", "Álex Grimaldo", "Eric Garcí", "Marcos Llorente", "Pedro Porro", "Aymeric Laporte", "Pau Cubarsí", "Marc Cucurella"],
+  "France": ["Malo Gusto", "Lucas Digne", "Dayot Upamecano", "Jules Koundé", "Ibrahima Konaté", "William Saliba", "Théo Hernandez", "Lucas Hernandez", "Maxence Lacroix"],
+  "Germany": ["Antonio Rüdiger", "Waldemar Anton", "Jonathan Tah", "Pascal Groß", "Nico Schlotterbeck", "Nathaniel Brown", "David Raum", "Malick Thiaw"],
+  "Iran": ["Saleh Hardani", "Ehsan Hajsafi", "Shojae Khalilzadeh", "Milad Mohammadi", "Hossein Kanaanizadegan", "Aria Yousefi", "Ali Nemati", "Ramin Rezaeian", "Danial Eiri"],
+  "Japan": ["Yukinari Sugawara", "Shōgo Taniguchi", "Kō Itakura", "Yūto Nagatomo", "Tsuyoshi Watanabe", "Ayumu Seko", "Hiroki Itō", "Takehiro Tomiyasu", "Junnosuke Suzuki"],
+  "Austria": ["David Affengruber", "Kevin Danso", "Stefan Posch", "David Alaba", "Philipp Lienhart", "Phillipp Mwene", "Alexander Prass", "Marco Friedl", "Michael Svoboda"],
+  "Czech Republic": ["David Zima", "Tomáš Holeš", "Robin Hranáč", "Vladimír Coufal", "Štěpán Chaloupek", "Ladislav Krejčí", "David Jurásek", "Jaroslav Zelený", "David Douděra"],
+  "England": ["Ezri Konsa", "Nico O'Reilly", "John Stones", "Marc Guéhi", "Trevoh Chalobah", "Dan Burn", "Reece James", "Djed Spence", "Jarell Quansah"]
 }
