@@ -63,13 +63,13 @@ async function scrapeWikipediaWorldCup2026() {
       };
 
       const homeGoalScorers = [];
-      $event.find('.fhgoal a').each((j, a) => {
+      $event.find('.fhgoal li > a').each((j, a) => {
         const name = extractName(a);
         if (name) homeGoalScorers.push(name);
       });
 
       const awayGoalScorers = [];
-      $event.find('.fagoal a').each((j, a) => {
+      $event.find('.fagoal li > a').each((j, a) => {
         const name = extractName(a);
         if (name) awayGoalScorers.push(name);
       });
