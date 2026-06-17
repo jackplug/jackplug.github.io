@@ -65,31 +65,31 @@ async function scrapeWikipediaWorldCup2026() {
       const homeGoalScorers = [];
       $event.find('.fhgoal li > a').each((j, a) => {
         const name = extractName(a);
-        // if (name) homeGoalScorers.push(name);
+        if (name) homeGoalScorers.push(name);
 
         // check for multiple goals scored by a single scorer and add the extra incidences of scorer
-        let goalTimes = $(a).next().find('span:not([class])');
+        // let goalTimes = $(a).next().find('span:not([class])');
 
-        if (goalTimes.length > 0) {
-          for (let i = 0; i < goalTimes.length; i++) {
-            if (name) homeGoalScorers.push(name);
-          }
-        }
+        // if (goalTimes.length > 0) {
+        //   for (let i = 0; i < goalTimes.length; i++) {
+        //     if (name) homeGoalScorers.push(name);
+        //   }
+        // }
       });
 
       const awayGoalScorers = [];
       $event.find('.fagoal li > a').each((j, a) => {
         const name = extractName(a);
-        // if (name) awayGoalScorers.push(name);
+        if (name) awayGoalScorers.push(name);
 
         // check for multiple goals scored by a single scorer and add the extra incidences of scorer
-        let goalTimes = $(a).next().find('span:not([class])');
+        // let goalTimes = $(a).next().find('span:not([class])');
 
-        if (goalTimes.length > 0) {
-          for (let i = 0; i < goalTimes.length; i++) {
-            if (name) awayGoalScorers.push(name);
-          }
-        }
+        // if (goalTimes.length > 0) {
+        //   for (let i = 0; i < goalTimes.length; i++) {
+        //     if (name) awayGoalScorers.push(name);
+        //   }
+        // }
       });
 
       matches.push({
