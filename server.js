@@ -72,7 +72,7 @@ async function scrapeWikipediaWorldCup2026() {
         // (on the page, we only see the scorers name once, but we see multiple goal *times*)
         $goalsBlock.find('.fb-goal').each((i, goal) => {
           $(goal).children().not('[typeof]').each((j, goalTime) => {
-            goalScorers.push(extractName($(goal).prev('a'));
+            goalScorers.push(extractName($(goal).prev('a')));
           });
         });
 
