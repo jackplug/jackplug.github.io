@@ -29,9 +29,11 @@ async function scrapeWikipediaWorldCup2026() {
 
     $('[itemtype="http://schema.org/SportsEvent"]').each((i, event) => {
       const $event = $(event);
-      const homeTeam = $event.find('.fhome a').text().trim();
-      const awayTeam = $event.find('.faway a').text().trim();
-      const scoreText = $event.find('.fscore a').text().trim();
+
+      const $match = $event.find('tr[itemprop="name"]');
+      const homeTeam = $match.find('.fhome [itemprop="name"] a').text().trim();
+      const awayTeam = $match.find('.faway [itemprop="name"] a').text().trim();
+      const scoreText = $match.find('.fscore a').text().trim();
 
       if (!homeTeam || !awayTeam || !scoreText) {
         console.log(`Skipping match ${i}: missing data`);
@@ -54,59 +56,32 @@ async function scrapeWikipediaWorldCup2026() {
         return;
       }
 
-      // Extract goal scorers
-      const extractName = (a) => {
-        const title = $(a).attr('title') || '';
-        if (typeof title !== 'string') return '';
-        const parts = title.split(' (');
-        return parts[0].trim();
+      const $homeGoals = $event.find('.fhgoal');
+      const $awayGoals = $event.find('.fagoal');
+
+      const getGoalScorers = ($goalsBlock) => {
+        const goalScorers = [];
+        const extractName = (a) => {
+          const title = $(a).attr('title') || '';
+          if (typeof title !== 'string') return '';
+          const parts = title.split(' (');
+          return parts[0].trim();
+        };
+
+        // deal with cases where a scorer has scored multiple times
+        // (on the page, we only see the scorers name once, but we see multiple goal *times*)
+        $goalsBlock.find('.fb-goal').each((i, goal) => {
+          $(goal).children().not('[typeof]').each((j, goalTime) => {
+            goalScorers.push(extractName($(goal).prev('a'));
+          });
+        });
+
+          return goalScorers;
       };
 
-      const homeGoalScorers = [];
-      $event.find('.fhgoal li > a').each((j, a) => {
-        const name = extractName(a);
-        if (name) homeGoalScorers.push(name);
+      const homeGoalScorers = getGoalScorers($homeGoals);
+      const awayGoalScorers = getGoalScorers($awayGoals);      
 
-        let goalTimes = $(a).parent().find('.fb-goal').children().not('[typeof]');
-
-        if (goalTimes.length > 1) {
-          for (let i = 1; i < goalTimes.length; i++) {
-            if (name) homeGoalScorers.push(name);
-          }
-        }
-
-        // check for multiple goals scored by a single scorer and add the extra incidences of scorer
-        // let goalTimes = $(a).next().find('span:not([class])');
-
-        // if (goalTimes.length > 0) {
-        //   for (let i = 0; i < goalTimes.length; i++) {
-        //     if (name) homeGoalScorers.push(name);
-        //   }
-        // }
-      });
-
-      const awayGoalScorers = [];
-      $event.find('.fagoal li > a').each((j, a) => {
-        const name = extractName(a);
-        if (name) awayGoalScorers.push(name);
-
-        let goalTimes = $(a).parent().find('.fb-goal').children().not('[typeof]');
-
-        if (goalTimes.length > 1) {
-          for (let i = 1; i < goalTimes.length; i++) {
-            if (name) awayGoalScorers.push(name);
-          }
-        }
-
-        // check for multiple goals scored by a single scorer and add the extra incidences of scorer
-        // let goalTimes = $(a).next().find('span:not([class])');
-
-        // if (goalTimes.length > 0) {
-        //   for (let i = 0; i < goalTimes.length; i++) {
-        //     if (name) awayGoalScorers.push(name);
-        //   }
-        // }
-      });
 
       matches.push({
         homeTeam,
