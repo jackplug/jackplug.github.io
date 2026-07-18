@@ -242,7 +242,7 @@
         const awayTeam = teamData.find(t => t.name === match.awayTeam);
 
         // Process home team if tracked
-        if (homeTeam) {
+        if (homeTeam && typeof homeScore === 'number') {
           homeTeam.played++;
           const homeScore = match.homeScore || 0;
           const awayScore = match.awayScore || 0;
@@ -277,7 +277,7 @@
         }
 
         // Process away team if tracked
-        if (awayTeam) {
+        if (awayTeam && typeof awayScore === 'number') {
           awayTeam.played++;
           const homeScore = match.homeScore || 0;
           const awayScore = match.awayScore || 0;
