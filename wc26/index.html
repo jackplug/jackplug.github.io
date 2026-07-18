@@ -190,12 +190,46 @@
 
     // Fetch match results from backend
     async function fetchMatchResults() {
+      // try {
+      //   const resp = await fetch('https://jackplug-github-io-wc26backend.onrender.com/api/wc-results');
+      //   if (!resp.ok) throw new Error(`Failed to fetch match results: ${resp.status}`);
+      //   return await resp.json();
+      // } catch (e) {
+      //   return null;
+      // }
+
+      const url = "https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json";
+      
       try {
-        const resp = await fetch('https://jackplug-github-io-wc26backend.onrender.com/api/wc-results');
-        if (!resp.ok) throw new Error(`Failed to fetch match results: ${resp.status}`);
-        return await resp.json();
-      } catch (e) {
-        return null;
+          const response = await fetch(url);
+          const data = await response.json();
+          const matches = data.matches || [];
+          
+          const formattedMatches = matches.map(match => {
+              // Target the ft (full-time) score array if it exists safely
+              const homeScore = match.score && match.score.ft ? match.score.ft[0] : null;
+              const awayScore = match.score && match.score.ft ? match.score.ft[1] : null;
+              
+              // Map arrays, falling back to an empty array if nobody scored or match hasn't played
+              const homeGoalScorers = match.goals1 ? match.goals1.map(goal => goal.name) : [];
+              const awayGoalScorers = match.goals2 ? match.goals2.map(goal => goal.name) : [];
+              
+              return {
+                  homeTeam: match.team1,
+                  awayTeam: match.team2,
+                  homeScore: homeScore,
+                  awayScore: awayScore,
+                  homeGoalScorers: homeGoalScorers,
+                  awayGoalScorers: awayGoalScorers
+              };
+          });
+          
+          console.log(JSON.stringify(formattedMatches, null, 4));
+          return formattedMatches;
+          
+      } catch (error) {
+          console.error("Error processing OpenFootball JSON payload:", error);
+          return null;
       }
     }
 
